@@ -81,6 +81,47 @@
       </tags>
   </entry>
   <entry>
+    <title>docker安装ES</title>
+    <url>/2021/07/03/docker%E5%AE%89%E8%A3%85ES/</url>
+    <content><![CDATA[<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker search elasticsearch <span class="comment">#查询所有docker中elasticsearch的镜像</span></span><br><span class="line">docker pull elasticsearch <span class="comment"># 默认拉取最新版本的镜像</span></span><br></pre></td></tr></table></figure>
+<h2 id="创建容器"><a href="#创建容器" class="headerlink" title="创建容器"></a>创建容器</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run --name elasticsearch --net host -e &quot;discovery.type=single-node&quot; elasticsearch</span><br></pre></td></tr></table></figure>
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker start elasticsearch</span><br></pre></td></tr></table></figure>
+<p><strong>如果使用的服务器内存不足，可指定内存启动</strong></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker run --name elasticsearch -d -e ES_JAVA_OPTS=&quot;-Xms512m -Xmx512m&quot; --net host -e &quot;discovery.type=single-node&quot; -p 9200:9200 -p 9300:9300 elasticsearch</span><br></pre></td></tr></table></figure>
+<h2 id="访问"><a href="#访问" class="headerlink" title="访问"></a>访问</h2><p><code>curl 127.0.0.1:9200</code><br>{<br>  “name” : “vGGIfjf”,<br>  “cluster_name” : “elasticsearch”,<br>  “cluster_uuid” : “k8SXEdE8T2etZLypODHBtQ”,<br>  “version” : {<br>    “number” : “5.6.12”,<br>    “build_hash” : “cfe3d9f”,<br>    “build_date” : “2018-09-10T20:12:43.732Z”,<br>    “build_snapshot” : false,<br>    “lucene_version” : “6.6.1”<br>  },<br>  “tagline” : “You Know, for Search”<br>}</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><p><strong>如需在本地浏览器中访问 阿里云服务上docker中的elasticsearch</strong></p>
+<p>需要在阿里云服务其中添加安全组的配置把9200的端口号加上</p>
+<h2 id="安装ElasticSearch-head"><a href="#安装ElasticSearch-head" class="headerlink" title="安装ElasticSearch head"></a>安装ElasticSearch head</h2><p>官网地址:<a href="https://github.com/mobz/elasticsearch-head" target="_blank" rel="noopener">ElasticSearch head</a></p>
+<ol>
+<li>拉取镜像 <code>docker pull mobz/elasticsearch-head:5</code></li>
+<li>创建容器 <code>docker create --name elasticsearch-head -p 9100:9100 mobz/elasticsearch-head:5</code></li>
+<li>启动 <code>docker start elasticsearch-head</code></li>
+</ol>
+<p>ElasticSearch head需要连接到ElasticSearch服务端是需要在服务端进行跨域配置</p>
+<p>修改docker中elasticsearch的elasticsearch.yml文件</p>
+<ol>
+<li><p>进入elasticsearch容器内<code>docker exec -it elasticsearch bash</code></p>
+</li>
+<li><p><code>vim config/elasticsearch.yml</code></p>
+<p>如遇到无法使用vim命令，需要进行安装</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apt-get update</span><br><span class="line">apt-get install vim</span><br></pre></td></tr></table></figure>
+<p>添加：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">http.cors.enabled: true </span><br><span class="line">http.cors.allow-origin: &quot;*&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>退出并重启服务</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">exit</span><br><span class="line">docker restart elasticsearch</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><img src="https://cdn.nlark.com/yuque/0/2021/png/2678749/1625327198146-176ac7a7-a491-4f47-ae04-1b23b3f2ea87.png?x-oss-process=image%2Fresize%2Cw_748" alt></p>
+]]></content>
+      <categories>
+        <category>docker</category>
+      </categories>
+      <tags>
+        <tag>es</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>This is why me play</title>
     <url>/2018/10/20/This-is-why-me-play/</url>
     <content><![CDATA[<h3 id="周末的闲暇"><a href="#周末的闲暇" class="headerlink" title="周末的闲暇"></a>周末的闲暇</h3><p>周末的美好存在于你有所期盼。<br>不用理会闹钟的催促，停止了响声后还能安然自得的睡会。<br>然后再懒洋洋的为自己美美做个早餐，更会得意的和心爱的人分享。<br><img src="/img/zishu.jpg" alt><br>哈哈，就是这个样子比较奇怪，被我咬过后的紫薯。很不错吧，我的Lili肯定看着流口睡啦。好啦，想着能给心爱的人做早餐那应该是件很幸福的事情。</p>
@@ -106,56 +147,6 @@
 </ol>
 <h4 id="非聚簇索引"><a href="#非聚簇索引" class="headerlink" title="非聚簇索引"></a>非聚簇索引</h4><p>非主键索引其原理是一样的，MySQL 都是去维护一颗 B+ 树，说白了，你建立多少个索引，MySQL 就会帮你维护多少的B+树。</p>
 <h4 id="回表"><a href="#回表" class="headerlink" title="回表"></a><strong>回表</strong></h4><p>根据非主键索引查询到的结果并没有查找的字段值，此时就需要再次根据主键从聚簇索引的根节点开始查找，这样再次查找到的记录才是完成的</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>vim常用命令总结</title>
-    <url>/2021/05/30/vim%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<h2 id="移动操作"><a href="#移动操作" class="headerlink" title="移动操作"></a>移动操作</h2><ul>
-<li><p>0  光标移动到行首</p>
-</li>
-<li><p>$  光标移动到行首</p>
-</li>
-<li><p>G 光标移动到文件末尾</p>
-</li>
-<li><p>1G 光标移动到第一行</p>
-</li>
-<li><p>u 撤回</p>
-</li>
-</ul>
-<h2 id="插入操作"><a href="#插入操作" class="headerlink" title="插入操作"></a>插入操作</h2><ul>
-<li><p>i  普通插入</p>
-</li>
-<li><p>A 在当前行的末尾插入</p>
-</li>
-<li><p>o 当前行的下方打开一行</p>
-</li>
-<li><p>O 当前行的上方打开一行</p>
-</li>
-</ul>
-<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><ul>
-<li><p>dd 删除当前行</p>
-</li>
-<li><p>x 删除当前字符</p>
-</li>
-<li><p>d$ 删除从光标位置到行尾的文本</p>
-</li>
-</ul>
-<h2 id="复制"><a href="#复制" class="headerlink" title="复制"></a>复制</h2><ul>
-<li>yy 复制当前行</li>
-</ul>
-<h2 id="粘贴"><a href="#粘贴" class="headerlink" title="粘贴"></a>粘贴</h2><ul>
-<li><p>p 把复制的一行粘贴到当前行的下面</p>
-</li>
-<li><p>P 所复制的文本粘贴到当前行之上面</p>
-</li>
-</ul>
-<h2 id="查找文件"><a href="#查找文件" class="headerlink" title="查找文件"></a>查找文件</h2><ul>
-<li>/查找的内容  n 下一个的位置</li>
-</ul>
-<h2 id="全局查找和替换"><a href="#全局查找和替换" class="headerlink" title="全局查找和替换"></a>全局查找和替换</h2><ul>
-<li>:%s/查找的内容/替换的内容/g</li>
-</ul>
 ]]></content>
   </entry>
   <entry>
@@ -402,6 +393,332 @@
 </ul>
 </li>
 </ul>
+]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>vim常用命令总结</title>
+    <url>/2021/05/30/vim%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<h2 id="移动操作"><a href="#移动操作" class="headerlink" title="移动操作"></a>移动操作</h2><ul>
+<li><p>0  光标移动到行首</p>
+</li>
+<li><p>$  光标移动到行首</p>
+</li>
+<li><p>G 光标移动到文件末尾</p>
+</li>
+<li><p>1G 光标移动到第一行</p>
+</li>
+<li><p>u 撤回</p>
+</li>
+</ul>
+<h2 id="插入操作"><a href="#插入操作" class="headerlink" title="插入操作"></a>插入操作</h2><ul>
+<li><p>i  普通插入</p>
+</li>
+<li><p>A 在当前行的末尾插入</p>
+</li>
+<li><p>o 当前行的下方打开一行</p>
+</li>
+<li><p>O 当前行的上方打开一行</p>
+</li>
+</ul>
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><ul>
+<li><p>dd 删除当前行</p>
+</li>
+<li><p>x 删除当前字符</p>
+</li>
+<li><p>d$ 删除从光标位置到行尾的文本</p>
+</li>
+</ul>
+<h2 id="复制"><a href="#复制" class="headerlink" title="复制"></a>复制</h2><ul>
+<li>yy 复制当前行</li>
+</ul>
+<h2 id="粘贴"><a href="#粘贴" class="headerlink" title="粘贴"></a>粘贴</h2><ul>
+<li><p>p 把复制的一行粘贴到当前行的下面</p>
+</li>
+<li><p>P 所复制的文本粘贴到当前行之上面</p>
+</li>
+</ul>
+<h2 id="查找文件"><a href="#查找文件" class="headerlink" title="查找文件"></a>查找文件</h2><ul>
+<li>/查找的内容  n 下一个的位置</li>
+</ul>
+<h2 id="全局查找和替换"><a href="#全局查找和替换" class="headerlink" title="全局查找和替换"></a>全局查找和替换</h2><ul>
+<li>:%s/查找的内容/替换的内容/g</li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>xxx-spring-boot-starter</title>
+    <url>/2021/05/17/xxx-spring-boot-starter/</url>
+    <content><![CDATA[<h3 id="SpringBoot与spring-boot-starter的关系"><a href="#SpringBoot与spring-boot-starter的关系" class="headerlink" title="SpringBoot与spring-boot-starter的关系"></a>SpringBoot与spring-boot-starter的关系</h3><blockquote>
+<p>Spring Boot makes it <strong>easy</strong> to create stand-alone, production-grade Spring based Applications that you can “just run”.</p>
+</blockquote>
+<p>Spring Boot官方告诉我们：<code>Spring Boot</code>使您可以轻松地创建独立的、生产级的基于 Spring 的应用程序，您可以“直接运行”。重点突出<strong>easy</strong>，使用<code>Spring Boot</code>来构建应用就会非常的简单容易上手。</p>
+<p>如果有用过SSM（Spring+SpringMVC+MyBatis）搭建过后台开发程序的，一定都会有被各种配置文件毒打过。</p>
+<ol>
+<li><p>POM文件中引入需要的相关的jar包</p>
+</li>
+<li><p>配置web.xml, filter, log</p>
+</li>
+<li><p>配置数据库连接</p>
+</li>
+<li><p>配置事务管理</p>
+</li>
+<li><p>配置主动扫描</p>
+<p>。。。</p>
+</li>
+<li><p>配置Tomcat加载应用程序</p>
+</li>
+</ol>
+<p>等你一顿操作猛如虎后，可能是一个不起眼的配置加错了或者是复制有误就会导致整个应用程序莫名的启动异常。等你排查半天还是看不出什么问题，该有的配置都有了啊。找来有经验的老鸟帮忙排查下，弱弱的告诉你其实就是少加了个某某配置。简单又不简单，因为有经验的老鸟其实都是已经踩过坑的，在做一些总结的话整体的项目搭建是难不倒它们。</p>
+<p>但如果是个新手又缺乏一些研究探索的话就会把诸多的配置文件给劝退了，只能照猫画虎按照前人的进行复制粘贴，到后来还会是问题频出。这于这些问题SpringBoot也帮我们考虑到了。</p>
+<p><strong>Features</strong></p>
+<ul>
+<li><p>Create stand-alone Spring applications</p>
+<p>创建独立的 Spring 应用程序</p>
+</li>
+<li><p>Embed Tomcat, Jetty or Undertow directly (no need to deploy WAR files)</p>
+<p>直接嵌入 Tomcat、 Jetty 或 Undertow (不需要部署 WAR 文件)</p>
+</li>
+<li><p>Provide opinionated ‘starter’ dependencies to simplify your build configuration</p>
+<p>提供固定的“启动器”依赖项，以简化构建配置</p>
+</li>
+<li><p>Automatically configure Spring and 3rd party libraries whenever possible</p>
+<p>尽可能自动配置 Spring 和第三方库</p>
+</li>
+<li><p>Provide production-ready features such as metrics, health checks, and externalized configuration</p>
+<p>提供可用于生产的特性，例如度量、健康检查和外部化配置</p>
+</li>
+<li><p>Absolutely no code generation and no requirement for XML configuration</p>
+<p>绝对没有代码生成，也不需要 XML 配置</p>
+</li>
+</ul>
+<p>从它的这些新特性就可以看出，SpringBoot为我们实现好了很多固定的“starter”依赖项来简化构建配置，而且已插件的形式支持第三方自己实现的“starter”，一个字就是<strong>easy</strong>。有了这些好用的特性妈妈在也不用担心我不会搭建Java web应用了。</p>
+<p>现在我们来看看一个简单的SpringBoot搭建web应用都需要哪些文件。</p>
+<ol>
+<li><p>第一步引入POM文件，只需要加上web服务对应的starter即可<code>spring-boot-starter-web</code></p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.stonie<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-sample<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0.2.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="2">
+<li><p>第二步，添加一个启动的入口文件</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(Application<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第三步，写一个控制器类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Hello World!"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>​        到这里一个简单的web应用程序就构建好了，确实很<strong>easy</strong>只有3个文件便完成了没有其他复杂的配置文件。这便得益于我们在pom文件中依赖了<code>spring-boot-starter-web</code>，如果我们的应用程序还要加上其他的新特性便可以依赖其他<code>starter</code></p>
+<h3 id="spring-boot自动配置原理"><a href="#spring-boot自动配置原理" class="headerlink" title="spring-boot自动配置原理"></a>spring-boot自动配置原理</h3><p>​        好奇的同学就会想SpringBoot到底是怎么帮我们自动配置呢，仔细的同学便会发现在上述启动的入口类中有加上了<code>@SpringBootApplication</code>这个陌生的注解。没错就是它。</p>
+<p>​        Spring Boot 项目通常都有一个入口类，入口类上多了一个<code>@SpringBootApplication</code>的注解， <code>main</code> 方法和标准的 Java 应用入口方法是一样的，在上面的例子中，这个 <code>main</code> 方法中只有一行代码：<code>SpringApplication.run()</code>，这是一个静态方法，用于启动整个 Spring Boot 项目。</p>
+<p><code>@SpringBootApplication</code>注解是由多个注解组合而成</p>
+<ul>
+<li><p><code>@ComponentScan</code></p>
+<ul>
+<li>扫描当前包及其子包下被<code>@Component</code>，<code>@Controller</code>，<code>@Service</code>，<code>@Repository</code>注解标记的类并纳入到spring容器中进行管理</li>
+</ul>
+</li>
+<li><p><code>@SpringBootConfiguration</code></p>
+<ul>
+<li><code>@SpringBootConfiguration</code>继承自<code>@Configuration</code>，二者功能也一致，标注当前类是配置类，并会将当前类内声明的一个或多个以<code>@Bean</code>注解标记的方法的实例纳入到<code>srping</code>容器中</li>
+</ul>
+</li>
+<li><code>@EnableAutoConfiguration</code><ul>
+<li>核心的就是<code>@EnableAutoConfiguration</code>的作用实现了启动自动的配置，<code>Springboot</code>根据你添加的jar包来配置你项目的默认配置，比如根据<code>spring-boot-starter-web</code> ，来判断你的项目是否需要添加了<code>webmvc</code>和<code>tomcat</code>，就会自动的帮你配置web项目中所需要的默认配置。</li>
+</ul>
+</li>
+</ul>
+<p>在来具体看看<code>@EnableAutoConfiguration</code>的构成</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="meta">@AutoConfigurationPackage</span></span><br><span class="line"><span class="meta">@Import</span>(&#123;AutoConfigurationImportSelector<span class="class">.<span class="keyword">class</span>&#125;)</span></span><br><span class="line"><span class="class"><span class="title">public</span> @<span class="title">interface</span> <span class="title">EnableAutoConfiguration</span> </span>&#123;</span><br><span class="line">    String ENABLED_OVERRIDE_PROPERTY = <span class="string">"spring.boot.enableautoconfiguration"</span>;</span><br><span class="line">    Class&lt;?&gt;[] exclude() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line">    String[] excludeName() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>​        最为重要的一行代码为：<code>@Import({AutoConfigurationImportSelector.class})</code>，其中 <code>@Import</code> 是 Spring 提供的一个注解，可以导入配置类或者 Bean 到当前类中。<code>AutoConfigurationImportSelector</code> 类的实现比较复杂，简单来说就是扫描所有 jar 包中的 <code>META-INF/spring-factories</code> 文件，这个文件就有描述了哪些自动的配置类。</p>
+<p>​        刚才我们的应用程序加入了 <code>spring-boot-starter-web</code>，可以看出它依赖于 spring-boot-starter-tomcat 和 spring-webmvc，所以这里会自动对 Tomcat 和 Spring MVC 进行配置。</p>
+<h3 id="实现一个demo-spring-boot-starter"><a href="#实现一个demo-spring-boot-starter" class="headerlink" title="实现一个demo-spring-boot-starter"></a>实现一个demo-spring-boot-starter</h3><p>那么根据上面spring-boot自动配置的原理我们也可以来实现一个我们自定义的第三方starter。首先我们需要遵行starter定义的命名规范。</p>
+<p>官方的starter是以 spring-boot-starter-xxx来定义。</p>
+<p>第三方的starter则是以 xxx-spring-boot-starter来定义。</p>
+<p>首先创建一个简单maven工程，目录结构如下图所示：</p>
+<p><img src="/img/demo-spring-boot-starter.png" alt="demo-spring-boot-starter"></p>
+<ol>
+<li><p>第一步pom.xml继承<code>wangdemo-spring-boot-starter</code>,在加上依赖</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.wang<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>demo-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.7<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.7<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-configuration-processor<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">optional</span>&gt;</span>true<span class="tag">&lt;/<span class="name">optional</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="2">
+<li><p>在properties包下，加上配置参数的实体类</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties</span>(prefix = <span class="string">"demo"</span>)</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 配置实体类，已demo为前缀的配置</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WangDemoProperties</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String appName;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getAppName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> appName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAppName</span><span class="params">(String appName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.appName = appName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建一个service来实现我们打印应用名称的配置</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WangDemoService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String appName;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WangDemoService</span><span class="params">(String appName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.appName = appName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">say</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.appName + <span class="string">" is begin"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建配置类，依赖service来实现自动打印应用名称的配置。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableConfigurationProperties</span>(WangDemoProperties<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">WangDemoConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> WangDemoProperties wangDemoProperties;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span>(name = <span class="string">"demo"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> WangDemoService <span class="title">demoService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> WangDemoService(wangDemoProperties.getAppName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>我们在resources包下创建<code>META-INF/spring-factories</code> 文件，内容就是把配置类指向我们刚创建的配置类。</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.wang.config.WangDemoConfig</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>​    6. 最后就可以用 <code>mvn install</code> 把我们刚创建的starter打成jar放到本地的maven仓库中。</p>
+<p>demo-spring-boot-starter的GitHub传送门<a href="https://github.com/wangzaogen/demo-spring-boot-starter" target="_blank" rel="noopener">地址</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>三个点</title>
+    <url>/2019/01/29/%E4%B8%89%E4%B8%AA%E7%82%B9/</url>
+    <content><![CDATA[<h2 id="明白"><a href="#明白" class="headerlink" title="明白"></a>明白</h2><p>从认识自我开始，着眼于本身。不再人云亦云，不再让自己的心意去适应他人所有的感受。有自己独到的见解，遇事冷静，能够做出理性的判断。</p>
+<h2 id="刚刚好"><a href="#刚刚好" class="headerlink" title="刚刚好"></a>刚刚好</h2><p>刚刚好，恰到好处，接近完美，却不在完美之中，能够对事物的把控拿捏到恰到好处的刚刚好，既让他们舒服，也能让自己自在。</p>
+<h2 id="慢慢来"><a href="#慢慢来" class="headerlink" title="慢慢来"></a>慢慢来</h2><p>没有什么事情都是能够如期而至的，种什么因，得什么果。春天播种，待到秋天收获果实，从中需要时间和心血的积累，慢慢的从量变到质变的一个过程。一步一个脚印会不会比一蹴而就来得更踏实呢？</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>六月天</title>
+    <url>/2018/11/25/%E5%85%AD%E6%9C%88%E5%A4%A9/</url>
+    <content><![CDATA[<p>夏日的热情   始于六月天</p>
+<p>喜欢夏天    从小就喜欢<br>是因为只有夏天可以到免费的游乐园里玩耍<br>有摸鱼抓虾   有比游的快   有比潜得深<br>那样的欢快随着浪花荡漾不止<br>直到岸边陆陆续续传来呼唤味觉的声音<br>要不然都无法阻止那阵阵浪花   落日也不能<br>第二天我们依旧会相约在水中<br>不见不散    继续欢声笑语<br>感谢小伙伴们的陪伴让炎炎夏日变得水花怕打后的凉爽<br>感觉六月天让往后的回忆中充满热情<br>那给我们带来欢乐是什么过山车海盗船都不可相提并论的<br>随着年岁的增长<br> 那条河还在    水还是那么清澈<br>人却都散了</p>
+<p>后来的后来   还是依旧喜欢夏天<br>炽热阳光下   总会有美好的事情发生<br>不管你    是不是正处于高考中    还是高考若干年后<br>高考消息都会直接间接地传递到你的耳中<br>又会是几家欢喜几家愁啊<br>一考定终生是残酷的<br>这会想想却是众多不公平中最公平的竞争了<br>每个人都知道平常心很重要    估计那真正能做到的其实是胸有成竹<br>平常心也就是骗骗自己     聊以慰藉罢了<br>若不是平时的学习还有欠缺    大可拍着胸脯说“我能行”<br>而不是事后的“我本可以”</p>
+<p>看看你来时的路    过了这六月天<br>你想去哪里呢     我在问自己<br>对于毕业七年后的我来说    总是会忍不住去回忆<br>回忆毕业聚会时的难舍难分<br>回忆查分数时的紧张期盼<br>回忆高考志愿全部撞车后的黯然落寞<br>回忆总是美好的    而我也是幸运的<br>补录的机会    让我重新出发</p>
+<p>兜兜转转来到上海一年又三个月<br>现在刚好又是六月天<br>较之来这座城市奋斗十余年的前辈们    这点时间都不及他们记忆中的一个片段<br>又与刚毕业来上海实习工作的应届生相比    只是先迈出去了一步<br>时间    无法控制<br>道路    艰难曲折<br>前景可待    未来可期</p>
+<blockquote>
+<p>书于2018年6月初的一个深夜，现重新整理于博客中</p>
+</blockquote>
+]]></content>
+  </entry>
+  <entry>
+    <title>写在开始</title>
+    <url>/2018/06/24/%E5%86%99%E5%9C%A8%E5%BC%80%E5%A7%8B/</url>
+    <content><![CDATA[<h2 id="写点什么呢"><a href="#写点什么呢" class="headerlink" title="写点什么呢"></a>写点什么呢</h2><h3 id="一开始"><a href="#一开始" class="headerlink" title="一开始"></a>一开始</h3><p>&ensp;&ensp;不知道从什么时候开始就想着创建自己的个人博客，要追溯起来的话，是从写代码开始了。很早就有了微博，知道有个新浪博客，往技术方面也有<a href="https://blog.csdn.net/gavin_wangzg" target="_blank" rel="noopener">CSDN</a>、博客园等等。总感觉这些都是依托在别人的平台上，而且当你想写点东西上去的时候，别人也都可以来评头论足。好想有块在网络上的自留地，自己在上面默默耕耘，记录些生活的点滴，那么自得其乐，岂不快哉。</p>
+<h3 id="曲折"><a href="#曲折" class="headerlink" title="曲折"></a>曲折</h3><p>  &ensp;&ensp;那也简单啦，不就是自己写个博客出来。后面发现自己真的想多了。想着自己会写一两行代码了，可以拿出来秀秀，捣鼓个博客出来也应该是小菜一碟。咱年轻人光说不练那可不成，说干就干。趁着阿里云服务器打折赶紧买了个乞丐版的来玩玩，顺带还把linux给研究了还算是一举两得。环境是搭建好了，那就坐等写个博客应用。<br> &ensp;&ensp; 不紧不慢，就这个应用啊还真是夭折了。把写的文章发布展示，好像看着就增删改查一套流程就结束了，缺也很难让自己满意的，想着从网上找个博客源码来改改也成，起码也算个在创造有个自己的影子也好。<br>  &ensp;&ensp;应用是告一段落，后面才知道光有服务器还不行啊，还得买个域名，必须还是备案，顿时心都凉了一节。都到最后一步，还算有个盼头，还记得想了个域名是wanghome.xin，没有续费估计这么好的域名是被别人申请走了。<br> &ensp;&ensp; 最后将应用发布起来，外网访问那个卡啊，连打字的心情都没了……</p>
+<h3 id="光明"><a href="#光明" class="headerlink" title="光明"></a>光明</h3><p>&ensp;&ensp;偶然的机会，看到别人的技术博客怎么是发布在github上了，虽说很早就注册怎么没发现这好东西。然后开始发挥搜索引擎的作用，找到了相关的教程。教程名是这样的‘使用Hexo+Github一步步搭建属于自己的博客’。终于我的博客就是这么来的。</p>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>  &ensp;&ensp; 开始总在想着怎么做个博客，后面才发现自己有点本末倒置。我要做的不是博客这个产品，而是写下一点一滴的生活啊。重点不是用什么工具，在什么场所去书写，还是有想法可以记录下来，能总结，并付诸实践就够了，但是上面曲折的过程也是个很好的体验。</p>
+<p>   <strong>这最后也是另一个开始</strong></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>周末的闲暇时光</title>
+    <url>/2018/11/04/%E5%91%A8%E6%9C%AB%E7%9A%84%E9%97%B2%E6%9A%87%E6%97%B6%E5%85%89/</url>
+    <content><![CDATA[<h2 id="周末时光的记录"><a href="#周末时光的记录" class="headerlink" title="周末时光的记录"></a>周末时光的记录</h2><p><em>一天当然是早餐开始啦</em><br><img src="/img/zc.jpg" alt><br><em>来点各种鱼</em><br><img src="/img/fish.jpg" alt><br><img src="/img/fish1.jpg" alt><br><img src="/img/fish2.jpg" alt></p>
+<p><em>吃完了鱼在来个拿手的西红柿</em><br><img src="/img/xhs.jpg" alt></p>
+<p><em>还得来点硬菜</em><br><img src="/img/xie.jpg" alt><br><em>米饭也得吃</em><br><img src="/img/fan.jpg" alt><br><em>打球这事不能少</em><br><img src="/img/ball.jpg" alt><br><em>哈哈，最后还有两个幼稚鬼</em><br><img src="/img/talk.jpg" alt></p>
+<p>周末的时间总是短暂的，好好修炼厨艺，好让我们红尘作伴吃的白白胖胖(坏笑)。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>一首小诗(转载)</title>
+    <url>/2018/11/04/%E4%B8%80%E9%A6%96%E5%B0%8F%E8%AF%97-%E8%BD%AC%E8%BD%BD/</url>
+    <content><![CDATA[<blockquote>
+<p>纽约时间比加州时间早三个小时，<br>New York is 3 hours ahead of California,<br>但加州时间并没有变慢。<br>but it does not make California slow.<br>有人22岁就毕业了，<br>Someone graduated at the age of 22,<br>但等了五年才找到好的工作！<br>but waited 5 years before securing a good job!<br>有人25岁就当上CEO，<br>Someone became a CEO at 25,<br>却在50岁去世。<br>and died at 50.<br>也有人迟到50岁才当上CEO，<br>While another became a CEO at 50,<br>然后活到90岁。<br>and lived to 90 years.<br>有人依然单身，<br>Someone is still single,<br>同时也有人已婚。<br>while someone else got married.<br>奥巴马55岁就退休，<br>Obama retires at 55,<br>川普70岁才开始当总统。<br>but Trump starts at 70.<br>世上每个人本来就有自己的发展时区。<br>Absolutely everyone in this world works based on their Time Zone.<br>身边有些人看似走在你前面，<br>People around you might seem to go ahead of you,<br>也有人看似走在你后面。<br>some might seem to be behind you.<br>但其实每个人在自己的时区有自己的步程。<br>But everyone is running their own RACE, in their own TIME.<br>不用嫉妒或嘲笑他们。<br>Don’t envy them or mock them.<br>他们都在自己的时区里，你也是！<br>They are in their TIME ZONE, and you are in yours!<br>生命就是等待正确的行动时机。<br>Life is about waiting for the right moment to act.<br>所以，放轻松。<br>So, RELAX.<br>你没有落后。<br>You’re not LATE.<br>你没有领先。<br>You’re not EARLY.<br>在命运为你安排的属于自己的时区里，一切都准时。<br>You are very much ON TIME, and in your TIME ZONE Destiny set up for you.</p>
+</blockquote>
+]]></content>
+  </entry>
+  <entry>
+    <title>忆初雪</title>
+    <url>/2019/01/12/%E5%BF%86%E5%88%9D%E9%9B%AA/</url>
+    <content><![CDATA[<p>满心欢喜    欢聚在冬日里<br>瑞雪没有任何寒意<br>红扑扑的笑脸上<br>洋溢着暖心的期待<br>拉起被寒风肆意后的小手<br>心疼片刻    迫不及待<br>用口中的气和心中的爱<br>将它包裹着<br>严严实实</p>
+<p>岁末  为往日时光标记节点<br>亦为来日的美好作为开头<br>感谢初雪为我们降临<br>纷纷扬扬飘落着<br>执灵之手    与子偕老</p>
+<p><img src="/img/snow.jpg" alt></p>
+]]></content>
+      <categories>
+        <category>Ling</category>
+      </categories>
+      <tags>
+        <tag>Ling</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>代码规范准则</title>
+    <url>/2021/04/18/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%87%86%E5%88%99/</url>
+    <content><![CDATA[<h3 id="规范准则"><a href="#规范准则" class="headerlink" title="规范准则"></a>规范准则</h3><ol>
+<li><p>代码行数：&lt;24</p>
+</li>
+<li><p>代码依赖（对象或方法）：&lt;7</p>
+</li>
+<li><p>代码块中循环复杂度：&lt;3</p>
+</li>
+<li><p><a href="https://blog.ploeh.dk/2019/11/04/the-80-24-rule/" target="_blank" rel="noopener">80/24法则–每行80个字符，不超过24行</a></p>
+</li>
+</ol>
+<p><strong>优雅的代码目标</strong></p>
+<p>小的代码块，小方法、小功能、小程序</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ActionResult <span class="title">Post</span><span class="params">(ReservationDto dto)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> validationMsg = Validator.Validate(dto);</span><br><span class="line">    <span class="keyword">if</span> (validationMsg != <span class="string">""</span>)</span><br><span class="line">        <span class="keyword">return</span> BadRequest(validationMsg);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">var</span> reservation = Mapper.Map(dto);</span><br><span class="line">    <span class="keyword">var</span> reservations = Repository.ReadReservations(reservation.Date);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">var</span> accepted = maîtreD.CanAccept(reservations, reservation);</span><br><span class="line">    <span class="keyword">if</span> (!accepted)</span><br><span class="line">        <span class="keyword">return</span> StatusCode(</span><br><span class="line">            StatusCodes.Status500InternalServerError,</span><br><span class="line">            <span class="string">"Couldn't accept."</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">var</span> id = Repository.Create(reservation);</span><br><span class="line">    <span class="keyword">return</span> Ok(id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>不要出现和业务无关的参数</li>
+</ul>
+<ul>
+<li>避免使用Map，Json这些复杂对象作为参数和结果</li>
+</ul>
+<ul>
+<li>有明确的输入输出和方法名</li>
+</ul>
+<ul>
+<li><p>编写能测试的函数</p>
+</li>
+<li><p>编写小方法的目的是推动自己写出可读的代码; 适合你大脑的代码。越小越好。</p>
+</li>
+</ul>
+<blockquote>
+<p>傻瓜都能写出计算机可以读懂的代码，只有优秀的程序员才能写出人能读懂的代码！</p>
+</blockquote>
+]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>天长地久</title>
+    <url>/2018/10/28/%E5%A4%A9%E9%95%BF%E5%9C%B0%E4%B9%85/</url>
+    <content><![CDATA[<blockquote>
+<p>人生里有些事情，不能蹉跎。</p>
+</blockquote>
+<p>&ensp;&ensp;是的，不能蹉跎，这是《天长地久》中给我印象最深刻的一句了。谢谢龙应台给我的指引，谢谢Lili懂我，把天长地久送到我手中，欣喜不已。冥冥之中的，说不清道不明的，爱情和亲情就如这书名天长地久……</p>
+<p>&ensp;&ensp;说起与龙应台的相识，要从她谆谆善诱的告诉她的孩子为什么要用功读书，要说也是如一般父母一样，都会苦口婆心的规劝自己顽皮的孩子。但从她口中却丝毫没有夹杂的个人的情愫，没有望子成龙，没有飞黄腾达。简单的希望孩子有成就感和尊严，并因此能快乐。 多么的接地气啊，快乐就好了。不是为孩子们规划好人生道路，而是给了他们生活的指南针，剩下的路交给他们自己前行。想必这些根源不是她的学识和见识，就像天长地久文中所写的，“美君无比坚定地对着丈夫说，’让女儿走自己的路’”，也是一种传承。</p>
+<p>&ensp;&ensp;龙应台女士是幸运的，有让女儿走自己路的母亲。换做是同时代的大多父母，必定也会重男轻女了，会不顾女儿的想法，要他们放弃学业，也或是难以支持的最后不得不早早的嫁人，就尘埃落定了。很多人却没有如此幸运。</p>
+<p>&ensp;&ensp;要是拿“让女儿走自己的路”来相比幸运的话，我的母亲肯定是不幸运的了，没有选择的权利。不对，是没有选择的，家庭的变故外公被带上了不同成分的‘帽子’，能想象本该是任性年纪的你，却不得不格外懂事起来，早早的帮外公分担家庭的重担。在他们的那个年代能够生存下去是多么重要，哪里能走自己的路，只是快乐的方式不一样。那又怎么样呢，勤劳的双手终究会改变一切。我的母亲没有龙应台女士的学识和见识，平凡的不能在平凡，也告诉我要用功读书，没有望子成龙，没有飞黄腾达，透露出的所有殷切期望，更多的是不要重走她的老路。</p>
+<p>&ensp;&ensp;书里的一些情节，字里行间，总让我回想起小时候的情景，都是快乐的。我很幸运。</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>要避免的前5个异常处理编码实践</title>
+    <url>/2019/01/06/%E8%A6%81%E9%81%BF%E5%85%8D%E7%9A%84%E5%89%8D5%E4%B8%AA%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E7%BC%96%E7%A0%81%E5%AE%9E%E8%B7%B5/</url>
+    <content><![CDATA[<ul>
+<li>不应该捕获<code>Throwable</code>和<code>Error</code>类</li>
+<li>永远不应该调用<code>Throwable.printStackTrace(...)</code></li>
+<li>通用异常永远不应抛出<code>Error</code>，<code>RuntimeException</code>，<code>Throwable</code>和<code>Exception</code></li>
+<li>异常处理程序应保留原始异常</li>
+<li>不应使用<code>System.out</code>或<code>System.err</code>来记录异常</li>
+</ul>
+<h3 id="不应该捕获Throwable和Error类"><a href="#不应该捕获Throwable和Error类" class="headerlink" title="不应该捕获Throwable和Error类"></a>不应该捕获<code>Throwable</code>和<code>Error</code>类</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	cl = Thread.currentThread().getContextClassLoader();	</span><br><span class="line">&#125;<span class="keyword">catch</span> (Throwable ex) &#123; <span class="comment">//Non-compliant code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Throwable</code>是<code>Java</code>中所有错误和异常的超类。错误是所有错误的超类，不应由应用程序捕获。因此，捕获<code>Throwable</code>本质上意味着诸如系统异常（例如，<code>OutOfMemoryError</code>，<code>StackOverFlowError</code>或<code>InternalError</code>）之类的错误也会被捕获。并且，推荐的方法是应用程序不应尝试从诸如此类的错误中恢复。因此，不应该捕获<code>Throwable</code>和<code>Error</code>类。只应捕获异常及其子类</p>
+<h3 id="永远不应该调用Throwable-printStackTrace"><a href="#永远不应该调用Throwable-printStackTrace" class="headerlink" title="永远不应该调用Throwable.printStackTrace(...)"></a>永远不应该调用<code>Throwable.printStackTrace(...)</code></h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line">&#125; <span class="keyword">catch</span>(Throwable t) &#123;</span><br><span class="line">  t.printStackTrace();        <span class="comment">// Non-Compliant</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>难以检索调试日志</strong>：使用<code>printStackTrace</code>编写的日志写入<code>System.err</code>，很难在其他地方路由或过滤。相反，使用<code>Logger</code>，可以轻松检索日志以进行调试。</li>
+<li><strong>违反编码最佳实践</strong>：通常，根据生产就绪应用程序中的编码指南，开发人员需要使用<code>Logger</code>方法记录不同级别的信息。但是，当涉及异常处理时，<code>printStackTrace</code>的实例通常出现在各个地方。因此，这违反了编码惯例，因此应该避免。</li>
+</ul>
+<h3 id="永远不应抛出诸如Error，RuntimeException，Throwable和Exception之类的通用异常"><a href="#永远不应抛出诸如Error，RuntimeException，Throwable和Exception之类的通用异常" class="headerlink" title="永远不应抛出诸如Error，RuntimeException，Throwable和Exception之类的通用异常"></a>永远不应抛出诸如Error，RuntimeException，Throwable和Exception之类的通用异常</h3><ul>
+<li>一个人应该避免抛出Generic <code>Exceptions</code>，<code>Throwable</code>，<code>Error</code>等的主要原因是这样做会阻止类捕获预期的异常。因此，调用者无法检查异常以确定它被抛出的原因，因此无法尝试恢复。</li>
+<li>另外，捕获<code>RuntimeException</code>被认为是一种不好的做法。因此，抛出Generic Exceptions / Throwable将导致开发人员在稍后阶段捕获异常，这最终会导致进一步的代码异味。</li>
+</ul>
+<p>Following is the code sample that represents this code smell:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">(String bar)</span> <span class="keyword">throws</span> Throwable </span>&#123; <span class="comment">// Non-compliant</span></span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"My Message"</span>);    <span class="comment">// Non-Compliant</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// One other instance which displays throwing Exception</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;...&#125; <span class="comment">// Non-compliant code</span></span><br></pre></td></tr></table></figure></p>
+<p>Instead, one would want to do something like following:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public void foo(String bar) &#123; </span><br><span class="line">  throw new CustomRuntimeException(&quot;My Message&quot;);    // Compliant</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="异常处理程序应保留原始异常"><a href="#异常处理程序应保留原始异常" class="headerlink" title="异常处理程序应保留原始异常"></a>异常处理程序应保留原始异常</h3><p><strong>先展示些坏味道的代码示例</strong></p>
+<ul>
+<li><p>In the code sample below, the exception is lost.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123; </span><br><span class="line">	<span class="comment">/* ... */</span> </span><br><span class="line">&#125; <span class="keyword">catch</span>( Exception e ) &#123;</span><br><span class="line">	SomeLogger.info( e.getMessage() ); <span class="comment">// The exception is lost. Just that exception message is written; Also, context information is not logged.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>In the code sample below, whole exception object is lost.</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123; </span><br><span class="line">	<span class="comment">/* ... */</span> </span><br><span class="line">&#125; <span class="keyword">catch</span>( Exception e ) &#123;</span><br><span class="line">	SomeLogger.info( <span class="string">"some context message"</span> ); <span class="comment">// The exception is lost</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>In the code sample below, no context message is provided.</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">try &#123; </span><br><span class="line">	/* ... */ </span><br><span class="line">&#125; catch( Exception e ) &#123;</span><br><span class="line">        SomeLogger.info( e ); // No context message</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p><strong>最佳实践如下</strong><br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">try &#123; </span><br><span class="line">  /* ... */ </span><br><span class="line">&#125; catch( Exception e ) &#123;</span><br><span class="line">  SomeLogger.info( &quot;some context message&quot;, e ); // Context message is there. Also, exception object is present</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果需要抛出异常的话 可以这样做<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">  /* ... */</span><br><span class="line">&#125; catch (Exception e) &#123;                                                   </span><br><span class="line">  throw new CustomRuntimeException(&quot;context&quot;, e); // Context message is there. Also, exception object is present</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="不应使用System-out或System-err来记录异常"><a href="#不应使用System-out或System-err来记录异常" class="headerlink" title="不应使用System.out或System.err来记录异常"></a>不应使用<code>System.out</code>或<code>System.err</code>来记录异常</h3><p>应该避免使用<code>System.out</code>或<code>System.err</code>来记录异常的主要原因是人们可能只是松散了重要的错误消息。相反，应该使用<code>Logging</code>框架（如<code>Log4J</code>或<code>LogBack</code>等）来记录异常。</p>
 ]]></content>
       <categories>
         <category>java</category>
@@ -1200,177 +1517,11 @@
       </tags>
   </entry>
   <entry>
-    <title>xxx-spring-boot-starter</title>
-    <url>/2021/05/17/xxx-spring-boot-starter/</url>
-    <content><![CDATA[<h3 id="SpringBoot与spring-boot-starter的关系"><a href="#SpringBoot与spring-boot-starter的关系" class="headerlink" title="SpringBoot与spring-boot-starter的关系"></a>SpringBoot与spring-boot-starter的关系</h3><blockquote>
-<p>Spring Boot makes it <strong>easy</strong> to create stand-alone, production-grade Spring based Applications that you can “just run”.</p>
-</blockquote>
-<p>Spring Boot官方告诉我们：<code>Spring Boot</code>使您可以轻松地创建独立的、生产级的基于 Spring 的应用程序，您可以“直接运行”。重点突出<strong>easy</strong>，使用<code>Spring Boot</code>来构建应用就会非常的简单容易上手。</p>
-<p>如果有用过SSM（Spring+SpringMVC+MyBatis）搭建过后台开发程序的，一定都会有被各种配置文件毒打过。</p>
-<ol>
-<li><p>POM文件中引入需要的相关的jar包</p>
-</li>
-<li><p>配置web.xml, filter, log</p>
-</li>
-<li><p>配置数据库连接</p>
-</li>
-<li><p>配置事务管理</p>
-</li>
-<li><p>配置主动扫描</p>
-<p>。。。</p>
-</li>
-<li><p>配置Tomcat加载应用程序</p>
-</li>
-</ol>
-<p>等你一顿操作猛如虎后，可能是一个不起眼的配置加错了或者是复制有误就会导致整个应用程序莫名的启动异常。等你排查半天还是看不出什么问题，该有的配置都有了啊。找来有经验的老鸟帮忙排查下，弱弱的告诉你其实就是少加了个某某配置。简单又不简单，因为有经验的老鸟其实都是已经踩过坑的，在做一些总结的话整体的项目搭建是难不倒它们。</p>
-<p>但如果是个新手又缺乏一些研究探索的话就会把诸多的配置文件给劝退了，只能照猫画虎按照前人的进行复制粘贴，到后来还会是问题频出。这于这些问题SpringBoot也帮我们考虑到了。</p>
-<p><strong>Features</strong></p>
-<ul>
-<li><p>Create stand-alone Spring applications</p>
-<p>创建独立的 Spring 应用程序</p>
-</li>
-<li><p>Embed Tomcat, Jetty or Undertow directly (no need to deploy WAR files)</p>
-<p>直接嵌入 Tomcat、 Jetty 或 Undertow (不需要部署 WAR 文件)</p>
-</li>
-<li><p>Provide opinionated ‘starter’ dependencies to simplify your build configuration</p>
-<p>提供固定的“启动器”依赖项，以简化构建配置</p>
-</li>
-<li><p>Automatically configure Spring and 3rd party libraries whenever possible</p>
-<p>尽可能自动配置 Spring 和第三方库</p>
-</li>
-<li><p>Provide production-ready features such as metrics, health checks, and externalized configuration</p>
-<p>提供可用于生产的特性，例如度量、健康检查和外部化配置</p>
-</li>
-<li><p>Absolutely no code generation and no requirement for XML configuration</p>
-<p>绝对没有代码生成，也不需要 XML 配置</p>
-</li>
-</ul>
-<p>从它的这些新特性就可以看出，SpringBoot为我们实现好了很多固定的“starter”依赖项来简化构建配置，而且已插件的形式支持第三方自己实现的“starter”，一个字就是<strong>easy</strong>。有了这些好用的特性妈妈在也不用担心我不会搭建Java web应用了。</p>
-<p>现在我们来看看一个简单的SpringBoot搭建web应用都需要哪些文件。</p>
-<ol>
-<li><p>第一步引入POM文件，只需要加上web服务对应的starter即可<code>spring-boot-starter-web</code></p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.stonie<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-sample<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0.2.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">java.version</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">java.version</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"> </span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol start="2">
-<li><p>第二步，添加一个启动的入口文件</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Application</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        SpringApplication.run(Application<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>第三步，写一个控制器类</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloController</span> </span>&#123;</span><br><span class="line">    <span class="meta">@RequestMapping</span>(<span class="string">"/"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">index</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">"Hello World!"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>​        到这里一个简单的web应用程序就构建好了，确实很<strong>easy</strong>只有3个文件便完成了没有其他复杂的配置文件。这便得益于我们在pom文件中依赖了<code>spring-boot-starter-web</code>，如果我们的应用程序还要加上其他的新特性便可以依赖其他<code>starter</code></p>
-<h3 id="spring-boot自动配置原理"><a href="#spring-boot自动配置原理" class="headerlink" title="spring-boot自动配置原理"></a>spring-boot自动配置原理</h3><p>​        好奇的同学就会想SpringBoot到底是怎么帮我们自动配置呢，仔细的同学便会发现在上述启动的入口类中有加上了<code>@SpringBootApplication</code>这个陌生的注解。没错就是它。</p>
-<p>​        Spring Boot 项目通常都有一个入口类，入口类上多了一个<code>@SpringBootApplication</code>的注解， <code>main</code> 方法和标准的 Java 应用入口方法是一样的，在上面的例子中，这个 <code>main</code> 方法中只有一行代码：<code>SpringApplication.run()</code>，这是一个静态方法，用于启动整个 Spring Boot 项目。</p>
-<p><code>@SpringBootApplication</code>注解是由多个注解组合而成</p>
-<ul>
-<li><p><code>@ComponentScan</code></p>
-<ul>
-<li>扫描当前包及其子包下被<code>@Component</code>，<code>@Controller</code>，<code>@Service</code>，<code>@Repository</code>注解标记的类并纳入到spring容器中进行管理</li>
-</ul>
-</li>
-<li><p><code>@SpringBootConfiguration</code></p>
-<ul>
-<li><code>@SpringBootConfiguration</code>继承自<code>@Configuration</code>，二者功能也一致，标注当前类是配置类，并会将当前类内声明的一个或多个以<code>@Bean</code>注解标记的方法的实例纳入到<code>srping</code>容器中</li>
-</ul>
-</li>
-<li><code>@EnableAutoConfiguration</code><ul>
-<li>核心的就是<code>@EnableAutoConfiguration</code>的作用实现了启动自动的配置，<code>Springboot</code>根据你添加的jar包来配置你项目的默认配置，比如根据<code>spring-boot-starter-web</code> ，来判断你的项目是否需要添加了<code>webmvc</code>和<code>tomcat</code>，就会自动的帮你配置web项目中所需要的默认配置。</li>
-</ul>
-</li>
-</ul>
-<p>在来具体看看<code>@EnableAutoConfiguration</code>的构成</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="meta">@AutoConfigurationPackage</span></span><br><span class="line"><span class="meta">@Import</span>(&#123;AutoConfigurationImportSelector<span class="class">.<span class="keyword">class</span>&#125;)</span></span><br><span class="line"><span class="class"><span class="title">public</span> @<span class="title">interface</span> <span class="title">EnableAutoConfiguration</span> </span>&#123;</span><br><span class="line">    String ENABLED_OVERRIDE_PROPERTY = <span class="string">"spring.boot.enableautoconfiguration"</span>;</span><br><span class="line">    Class&lt;?&gt;[] exclude() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line">    String[] excludeName() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>​        最为重要的一行代码为：<code>@Import({AutoConfigurationImportSelector.class})</code>，其中 <code>@Import</code> 是 Spring 提供的一个注解，可以导入配置类或者 Bean 到当前类中。<code>AutoConfigurationImportSelector</code> 类的实现比较复杂，简单来说就是扫描所有 jar 包中的 <code>META-INF/spring-factories</code> 文件，这个文件就有描述了哪些自动的配置类。</p>
-<p>​        刚才我们的应用程序加入了 <code>spring-boot-starter-web</code>，可以看出它依赖于 spring-boot-starter-tomcat 和 spring-webmvc，所以这里会自动对 Tomcat 和 Spring MVC 进行配置。</p>
-<h3 id="实现一个demo-spring-boot-starter"><a href="#实现一个demo-spring-boot-starter" class="headerlink" title="实现一个demo-spring-boot-starter"></a>实现一个demo-spring-boot-starter</h3><p>那么根据上面spring-boot自动配置的原理我们也可以来实现一个我们自定义的第三方starter。首先我们需要遵行starter定义的命名规范。</p>
-<p>官方的starter是以 spring-boot-starter-xxx来定义。</p>
-<p>第三方的starter则是以 xxx-spring-boot-starter来定义。</p>
-<p>首先创建一个简单maven工程，目录结构如下图所示：</p>
-<p><img src="/img/demo-spring-boot-starter.png" alt="demo-spring-boot-starter"></p>
-<ol>
-<li><p>第一步pom.xml继承<code>wangdemo-spring-boot-starter</code>,在加上依赖</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">parent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-parent<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.1.4.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">parent</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.wang<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>demo-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.0-SNAPSHOT<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">project.build.sourceEncoding</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">project.build.sourceEncoding</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.7<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.7<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-configuration-processor<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">optional</span>&gt;</span>true<span class="tag">&lt;/<span class="name">optional</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<ol start="2">
-<li><p>在properties包下，加上配置参数的实体类</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@ConfigurationProperties</span>(prefix = <span class="string">"demo"</span>)</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 配置实体类，已demo为前缀的配置</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WangDemoProperties</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String appName;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getAppName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> appName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAppName</span><span class="params">(String appName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.appName = appName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>创建一个service来实现我们打印应用名称的配置</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">WangDemoService</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String appName;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">WangDemoService</span><span class="params">(String appName)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.appName = appName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">say</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.appName + <span class="string">" is begin"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>创建配置类，依赖service来实现自动打印应用名称的配置。</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableConfigurationProperties</span>(WangDemoProperties<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">public</span> <span class="title">class</span> <span class="title">WangDemoConfig</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> WangDemoProperties wangDemoProperties;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span>(name = <span class="string">"demo"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> WangDemoService <span class="title">demoService</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> WangDemoService(wangDemoProperties.getAppName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>我们在resources包下创建<code>META-INF/spring-factories</code> 文件，内容就是把配置类指向我们刚创建的配置类。</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.wang.config.WangDemoConfig</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>​    6. 最后就可以用 <code>mvn install</code> 把我们刚创建的starter打成jar放到本地的maven仓库中。</p>
-<p>demo-spring-boot-starter的GitHub传送门<a href="https://github.com/wangzaogen/demo-spring-boot-starter" target="_blank" rel="noopener">地址</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>一首小诗(转载)</title>
-    <url>/2018/11/04/%E4%B8%80%E9%A6%96%E5%B0%8F%E8%AF%97-%E8%BD%AC%E8%BD%BD/</url>
-    <content><![CDATA[<blockquote>
-<p>纽约时间比加州时间早三个小时，<br>New York is 3 hours ahead of California,<br>但加州时间并没有变慢。<br>but it does not make California slow.<br>有人22岁就毕业了，<br>Someone graduated at the age of 22,<br>但等了五年才找到好的工作！<br>but waited 5 years before securing a good job!<br>有人25岁就当上CEO，<br>Someone became a CEO at 25,<br>却在50岁去世。<br>and died at 50.<br>也有人迟到50岁才当上CEO，<br>While another became a CEO at 50,<br>然后活到90岁。<br>and lived to 90 years.<br>有人依然单身，<br>Someone is still single,<br>同时也有人已婚。<br>while someone else got married.<br>奥巴马55岁就退休，<br>Obama retires at 55,<br>川普70岁才开始当总统。<br>but Trump starts at 70.<br>世上每个人本来就有自己的发展时区。<br>Absolutely everyone in this world works based on their Time Zone.<br>身边有些人看似走在你前面，<br>People around you might seem to go ahead of you,<br>也有人看似走在你后面。<br>some might seem to be behind you.<br>但其实每个人在自己的时区有自己的步程。<br>But everyone is running their own RACE, in their own TIME.<br>不用嫉妒或嘲笑他们。<br>Don’t envy them or mock them.<br>他们都在自己的时区里，你也是！<br>They are in their TIME ZONE, and you are in yours!<br>生命就是等待正确的行动时机。<br>Life is about waiting for the right moment to act.<br>所以，放轻松。<br>So, RELAX.<br>你没有落后。<br>You’re not LATE.<br>你没有领先。<br>You’re not EARLY.<br>在命运为你安排的属于自己的时区里，一切都准时。<br>You are very much ON TIME, and in your TIME ZONE Destiny set up for you.</p>
-</blockquote>
-]]></content>
-  </entry>
-  <entry>
-    <title>三个点</title>
-    <url>/2019/01/29/%E4%B8%89%E4%B8%AA%E7%82%B9/</url>
-    <content><![CDATA[<h2 id="明白"><a href="#明白" class="headerlink" title="明白"></a>明白</h2><p>从认识自我开始，着眼于本身。不再人云亦云，不再让自己的心意去适应他人所有的感受。有自己独到的见解，遇事冷静，能够做出理性的判断。</p>
-<h2 id="刚刚好"><a href="#刚刚好" class="headerlink" title="刚刚好"></a>刚刚好</h2><p>刚刚好，恰到好处，接近完美，却不在完美之中，能够对事物的把控拿捏到恰到好处的刚刚好，既让他们舒服，也能让自己自在。</p>
-<h2 id="慢慢来"><a href="#慢慢来" class="headerlink" title="慢慢来"></a>慢慢来</h2><p>没有什么事情都是能够如期而至的，种什么因，得什么果。春天播种，待到秋天收获果实，从中需要时间和心血的积累，慢慢的从量变到质变的一个过程。一步一个脚印会不会比一蹴而就来得更踏实呢？</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>六月天</title>
-    <url>/2018/11/25/%E5%85%AD%E6%9C%88%E5%A4%A9/</url>
-    <content><![CDATA[<p>夏日的热情   始于六月天</p>
-<p>喜欢夏天    从小就喜欢<br>是因为只有夏天可以到免费的游乐园里玩耍<br>有摸鱼抓虾   有比游的快   有比潜得深<br>那样的欢快随着浪花荡漾不止<br>直到岸边陆陆续续传来呼唤味觉的声音<br>要不然都无法阻止那阵阵浪花   落日也不能<br>第二天我们依旧会相约在水中<br>不见不散    继续欢声笑语<br>感谢小伙伴们的陪伴让炎炎夏日变得水花怕打后的凉爽<br>感觉六月天让往后的回忆中充满热情<br>那给我们带来欢乐是什么过山车海盗船都不可相提并论的<br>随着年岁的增长<br> 那条河还在    水还是那么清澈<br>人却都散了</p>
-<p>后来的后来   还是依旧喜欢夏天<br>炽热阳光下   总会有美好的事情发生<br>不管你    是不是正处于高考中    还是高考若干年后<br>高考消息都会直接间接地传递到你的耳中<br>又会是几家欢喜几家愁啊<br>一考定终生是残酷的<br>这会想想却是众多不公平中最公平的竞争了<br>每个人都知道平常心很重要    估计那真正能做到的其实是胸有成竹<br>平常心也就是骗骗自己     聊以慰藉罢了<br>若不是平时的学习还有欠缺    大可拍着胸脯说“我能行”<br>而不是事后的“我本可以”</p>
-<p>看看你来时的路    过了这六月天<br>你想去哪里呢     我在问自己<br>对于毕业七年后的我来说    总是会忍不住去回忆<br>回忆毕业聚会时的难舍难分<br>回忆查分数时的紧张期盼<br>回忆高考志愿全部撞车后的黯然落寞<br>回忆总是美好的    而我也是幸运的<br>补录的机会    让我重新出发</p>
-<p>兜兜转转来到上海一年又三个月<br>现在刚好又是六月天<br>较之来这座城市奋斗十余年的前辈们    这点时间都不及他们记忆中的一个片段<br>又与刚毕业来上海实习工作的应届生相比    只是先迈出去了一步<br>时间    无法控制<br>道路    艰难曲折<br>前景可待    未来可期</p>
-<blockquote>
-<p>书于2018年6月初的一个深夜，现重新整理于博客中</p>
-</blockquote>
-]]></content>
-  </entry>
-  <entry>
-    <title>写在开始</title>
-    <url>/2018/06/24/%E5%86%99%E5%9C%A8%E5%BC%80%E5%A7%8B/</url>
-    <content><![CDATA[<h2 id="写点什么呢"><a href="#写点什么呢" class="headerlink" title="写点什么呢"></a>写点什么呢</h2><h3 id="一开始"><a href="#一开始" class="headerlink" title="一开始"></a>一开始</h3><p>&ensp;&ensp;不知道从什么时候开始就想着创建自己的个人博客，要追溯起来的话，是从写代码开始了。很早就有了微博，知道有个新浪博客，往技术方面也有<a href="https://blog.csdn.net/gavin_wangzg" target="_blank" rel="noopener">CSDN</a>、博客园等等。总感觉这些都是依托在别人的平台上，而且当你想写点东西上去的时候，别人也都可以来评头论足。好想有块在网络上的自留地，自己在上面默默耕耘，记录些生活的点滴，那么自得其乐，岂不快哉。</p>
-<h3 id="曲折"><a href="#曲折" class="headerlink" title="曲折"></a>曲折</h3><p>  &ensp;&ensp;那也简单啦，不就是自己写个博客出来。后面发现自己真的想多了。想着自己会写一两行代码了，可以拿出来秀秀，捣鼓个博客出来也应该是小菜一碟。咱年轻人光说不练那可不成，说干就干。趁着阿里云服务器打折赶紧买了个乞丐版的来玩玩，顺带还把linux给研究了还算是一举两得。环境是搭建好了，那就坐等写个博客应用。<br> &ensp;&ensp; 不紧不慢，就这个应用啊还真是夭折了。把写的文章发布展示，好像看着就增删改查一套流程就结束了，缺也很难让自己满意的，想着从网上找个博客源码来改改也成，起码也算个在创造有个自己的影子也好。<br>  &ensp;&ensp;应用是告一段落，后面才知道光有服务器还不行啊，还得买个域名，必须还是备案，顿时心都凉了一节。都到最后一步，还算有个盼头，还记得想了个域名是wanghome.xin，没有续费估计这么好的域名是被别人申请走了。<br> &ensp;&ensp; 最后将应用发布起来，外网访问那个卡啊，连打字的心情都没了……</p>
-<h3 id="光明"><a href="#光明" class="headerlink" title="光明"></a>光明</h3><p>&ensp;&ensp;偶然的机会，看到别人的技术博客怎么是发布在github上了，虽说很早就注册怎么没发现这好东西。然后开始发挥搜索引擎的作用，找到了相关的教程。教程名是这样的‘使用Hexo+Github一步步搭建属于自己的博客’。终于我的博客就是这么来的。</p>
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>  &ensp;&ensp; 开始总在想着怎么做个博客，后面才发现自己有点本末倒置。我要做的不是博客这个产品，而是写下一点一滴的生活啊。重点不是用什么工具，在什么场所去书写，还是有想法可以记录下来，能总结，并付诸实践就够了，但是上面曲折的过程也是个很好的体验。</p>
-<p>   <strong>这最后也是另一个开始</strong></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>周末的闲暇时光</title>
-    <url>/2018/11/04/%E5%91%A8%E6%9C%AB%E7%9A%84%E9%97%B2%E6%9A%87%E6%97%B6%E5%85%89/</url>
-    <content><![CDATA[<h2 id="周末时光的记录"><a href="#周末时光的记录" class="headerlink" title="周末时光的记录"></a>周末时光的记录</h2><p><em>一天当然是早餐开始啦</em><br><img src="/img/zc.jpg" alt><br><em>来点各种鱼</em><br><img src="/img/fish.jpg" alt><br><img src="/img/fish1.jpg" alt><br><img src="/img/fish2.jpg" alt></p>
-<p><em>吃完了鱼在来个拿手的西红柿</em><br><img src="/img/xhs.jpg" alt></p>
-<p><em>还得来点硬菜</em><br><img src="/img/xie.jpg" alt><br><em>米饭也得吃</em><br><img src="/img/fan.jpg" alt><br><em>打球这事不能少</em><br><img src="/img/ball.jpg" alt><br><em>哈哈，最后还有两个幼稚鬼</em><br><img src="/img/talk.jpg" alt></p>
-<p>周末的时间总是短暂的，好好修炼厨艺，好让我们红尘作伴吃的白白胖胖(坏笑)。</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>天长地久</title>
-    <url>/2018/10/28/%E5%A4%A9%E9%95%BF%E5%9C%B0%E4%B9%85/</url>
-    <content><![CDATA[<blockquote>
-<p>人生里有些事情，不能蹉跎。</p>
-</blockquote>
-<p>&ensp;&ensp;是的，不能蹉跎，这是《天长地久》中给我印象最深刻的一句了。谢谢龙应台给我的指引，谢谢Lili懂我，把天长地久送到我手中，欣喜不已。冥冥之中的，说不清道不明的，爱情和亲情就如这书名天长地久……</p>
-<p>&ensp;&ensp;说起与龙应台的相识，要从她谆谆善诱的告诉她的孩子为什么要用功读书，要说也是如一般父母一样，都会苦口婆心的规劝自己顽皮的孩子。但从她口中却丝毫没有夹杂的个人的情愫，没有望子成龙，没有飞黄腾达。简单的希望孩子有成就感和尊严，并因此能快乐。 多么的接地气啊，快乐就好了。不是为孩子们规划好人生道路，而是给了他们生活的指南针，剩下的路交给他们自己前行。想必这些根源不是她的学识和见识，就像天长地久文中所写的，“美君无比坚定地对着丈夫说，’让女儿走自己的路’”，也是一种传承。</p>
-<p>&ensp;&ensp;龙应台女士是幸运的，有让女儿走自己路的母亲。换做是同时代的大多父母，必定也会重男轻女了，会不顾女儿的想法，要他们放弃学业，也或是难以支持的最后不得不早早的嫁人，就尘埃落定了。很多人却没有如此幸运。</p>
-<p>&ensp;&ensp;要是拿“让女儿走自己的路”来相比幸运的话，我的母亲肯定是不幸运的了，没有选择的权利。不对，是没有选择的，家庭的变故外公被带上了不同成分的‘帽子’，能想象本该是任性年纪的你，却不得不格外懂事起来，早早的帮外公分担家庭的重担。在他们的那个年代能够生存下去是多么重要，哪里能走自己的路，只是快乐的方式不一样。那又怎么样呢，勤劳的双手终究会改变一切。我的母亲没有龙应台女士的学识和见识，平凡的不能在平凡，也告诉我要用功读书，没有望子成龙，没有飞黄腾达，透露出的所有殷切期望，更多的是不要重走她的老路。</p>
-<p>&ensp;&ensp;书里的一些情节，字里行间，总让我回想起小时候的情景，都是快乐的。我很幸运。</p>
+    <title>我是你的</title>
+    <url>/2018/12/09/%E6%88%91%E6%98%AF%E4%BD%A0%E7%9A%84/</url>
+    <content><![CDATA[<p>我在轻轻地<br>呼唤一声<br>亲爱的zhiling<br>紧紧地    将你拥入我还怀里<br>慢慢地    靠近你的心<br>有了你    有了我<br>才有了我们<br>不管明天风和雨    也会有彩虹的出现</p>
+<p>我又轻轻地<br>呼唤一声<br>亲爱的zhiling<br>暖暖地    把你捧在我手心<br>悄悄地    把你融入我心里<br>就像一只小精灵    每天快乐而不停<br>轻轻地在耳边说    我爱你<br>亲爱的    我是你的</p>
+<p>就这样<br>紧紧地<br>慢慢地<br>暖暖地<br>悄悄地<br>守护着你<br>亲爱的zhiling</p>
 ]]></content>
   </entry>
   <entry>
@@ -1394,140 +1545,11 @@
       </tags>
   </entry>
   <entry>
-    <title>忆初雪</title>
-    <url>/2019/01/12/%E5%BF%86%E5%88%9D%E9%9B%AA/</url>
-    <content><![CDATA[<p>满心欢喜    欢聚在冬日里<br>瑞雪没有任何寒意<br>红扑扑的笑脸上<br>洋溢着暖心的期待<br>拉起被寒风肆意后的小手<br>心疼片刻    迫不及待<br>用口中的气和心中的爱<br>将它包裹着<br>严严实实</p>
-<p>岁末  为往日时光标记节点<br>亦为来日的美好作为开头<br>感谢初雪为我们降临<br>纷纷扬扬飘落着<br>执灵之手    与子偕老</p>
-<p><img src="/img/snow.jpg" alt></p>
-]]></content>
-      <categories>
-        <category>Ling</category>
-      </categories>
-      <tags>
-        <tag>Ling</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>代码规范准则</title>
-    <url>/2021/04/18/%E4%BB%A3%E7%A0%81%E8%A7%84%E8%8C%83%E5%87%86%E5%88%99/</url>
-    <content><![CDATA[<h3 id="规范准则"><a href="#规范准则" class="headerlink" title="规范准则"></a>规范准则</h3><ol>
-<li><p>代码行数：&lt;24</p>
-</li>
-<li><p>代码依赖（对象或方法）：&lt;7</p>
-</li>
-<li><p>代码块中循环复杂度：&lt;3</p>
-</li>
-<li><p><a href="https://blog.ploeh.dk/2019/11/04/the-80-24-rule/" target="_blank" rel="noopener">80/24法则–每行80个字符，不超过24行</a></p>
-</li>
-</ol>
-<p><strong>优雅的代码目标</strong></p>
-<p>小的代码块，小方法、小功能、小程序</p>
-<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ActionResult <span class="title">Post</span><span class="params">(ReservationDto dto)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> validationMsg = Validator.Validate(dto);</span><br><span class="line">    <span class="keyword">if</span> (validationMsg != <span class="string">""</span>)</span><br><span class="line">        <span class="keyword">return</span> BadRequest(validationMsg);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">var</span> reservation = Mapper.Map(dto);</span><br><span class="line">    <span class="keyword">var</span> reservations = Repository.ReadReservations(reservation.Date);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">var</span> accepted = maîtreD.CanAccept(reservations, reservation);</span><br><span class="line">    <span class="keyword">if</span> (!accepted)</span><br><span class="line">        <span class="keyword">return</span> StatusCode(</span><br><span class="line">            StatusCodes.Status500InternalServerError,</span><br><span class="line">            <span class="string">"Couldn't accept."</span>);</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">var</span> id = Repository.Create(reservation);</span><br><span class="line">    <span class="keyword">return</span> Ok(id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>不要出现和业务无关的参数</li>
-</ul>
-<ul>
-<li>避免使用Map，Json这些复杂对象作为参数和结果</li>
-</ul>
-<ul>
-<li>有明确的输入输出和方法名</li>
-</ul>
-<ul>
-<li><p>编写能测试的函数</p>
-</li>
-<li><p>编写小方法的目的是推动自己写出可读的代码; 适合你大脑的代码。越小越好。</p>
-</li>
-</ul>
-<blockquote>
-<p>傻瓜都能写出计算机可以读懂的代码，只有优秀的程序员才能写出人能读懂的代码！</p>
-</blockquote>
-]]></content>
-      <categories>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>暖冬</title>
     <url>/2018/11/24/%E6%9A%96%E5%86%AC/</url>
     <content><![CDATA[<p>过了冬至    清晨里自来水都夹带着些寒意<br>不紧不慢地洗漱一番   也会不由自主添衣起来<br>室外的西北风让脸颊有了些许紧绷感<br>路旁的行道树也褪去亮丽的绿叶<br>低着头    接受着西北风的洗礼<br>地铁站边的野猫也不见了踪影<br>希望傍晚归来时    能看到他们<br>忙碌的人群脚步都有加快起来<br>才能更好的抵抗寒风来袭</p>
 <p>昼短夜长    黑夜早早的来临<br>如我所愿<br>在天桥在发现了两只黑白相间的猫咪<br>他们蜷缩在一起<br>互相依靠    互相取暖<br>不受外界的打扰<br>是有共性的吗</p>
 <p>黑夜里期待电话另一头的声音<br>翻山越岭来温暖着我<br>让这冬日却也像夏天般炽热<br>喜欢下雪天   雪花漫天飞舞<br>冬日独有的景     总会让人忘记寒冷<br>忘乎所以的在雪地上    跑着    跳着<br>大自然所奉献的冰雪活动    记得为亲爱的和我来一场<br>牵着她的手    温暖着她<br>漫步在洁白的世界里<br>永远也走不到头<br>……<br><img src="/img/honey.jpg" alt></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>要避免的前5个异常处理编码实践</title>
-    <url>/2019/01/06/%E8%A6%81%E9%81%BF%E5%85%8D%E7%9A%84%E5%89%8D5%E4%B8%AA%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86%E7%BC%96%E7%A0%81%E5%AE%9E%E8%B7%B5/</url>
-    <content><![CDATA[<ul>
-<li>不应该捕获<code>Throwable</code>和<code>Error</code>类</li>
-<li>永远不应该调用<code>Throwable.printStackTrace(...)</code></li>
-<li>通用异常永远不应抛出<code>Error</code>，<code>RuntimeException</code>，<code>Throwable</code>和<code>Exception</code></li>
-<li>异常处理程序应保留原始异常</li>
-<li>不应使用<code>System.out</code>或<code>System.err</code>来记录异常</li>
-</ul>
-<h3 id="不应该捕获Throwable和Error类"><a href="#不应该捕获Throwable和Error类" class="headerlink" title="不应该捕获Throwable和Error类"></a>不应该捕获<code>Throwable</code>和<code>Error</code>类</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	cl = Thread.currentThread().getContextClassLoader();	</span><br><span class="line">&#125;<span class="keyword">catch</span> (Throwable ex) &#123; <span class="comment">//Non-compliant code</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>Throwable</code>是<code>Java</code>中所有错误和异常的超类。错误是所有错误的超类，不应由应用程序捕获。因此，捕获<code>Throwable</code>本质上意味着诸如系统异常（例如，<code>OutOfMemoryError</code>，<code>StackOverFlowError</code>或<code>InternalError</code>）之类的错误也会被捕获。并且，推荐的方法是应用程序不应尝试从诸如此类的错误中恢复。因此，不应该捕获<code>Throwable</code>和<code>Error</code>类。只应捕获异常及其子类</p>
-<h3 id="永远不应该调用Throwable-printStackTrace"><a href="#永远不应该调用Throwable-printStackTrace" class="headerlink" title="永远不应该调用Throwable.printStackTrace(...)"></a>永远不应该调用<code>Throwable.printStackTrace(...)</code></h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  <span class="comment">/* ... */</span></span><br><span class="line">&#125; <span class="keyword">catch</span>(Throwable t) &#123;</span><br><span class="line">  t.printStackTrace();        <span class="comment">// Non-Compliant</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul>
-<li><strong>难以检索调试日志</strong>：使用<code>printStackTrace</code>编写的日志写入<code>System.err</code>，很难在其他地方路由或过滤。相反，使用<code>Logger</code>，可以轻松检索日志以进行调试。</li>
-<li><strong>违反编码最佳实践</strong>：通常，根据生产就绪应用程序中的编码指南，开发人员需要使用<code>Logger</code>方法记录不同级别的信息。但是，当涉及异常处理时，<code>printStackTrace</code>的实例通常出现在各个地方。因此，这违反了编码惯例，因此应该避免。</li>
-</ul>
-<h3 id="永远不应抛出诸如Error，RuntimeException，Throwable和Exception之类的通用异常"><a href="#永远不应抛出诸如Error，RuntimeException，Throwable和Exception之类的通用异常" class="headerlink" title="永远不应抛出诸如Error，RuntimeException，Throwable和Exception之类的通用异常"></a>永远不应抛出诸如Error，RuntimeException，Throwable和Exception之类的通用异常</h3><ul>
-<li>一个人应该避免抛出Generic <code>Exceptions</code>，<code>Throwable</code>，<code>Error</code>等的主要原因是这样做会阻止类捕获预期的异常。因此，调用者无法检查异常以确定它被抛出的原因，因此无法尝试恢复。</li>
-<li>另外，捕获<code>RuntimeException</code>被认为是一种不好的做法。因此，抛出Generic Exceptions / Throwable将导致开发人员在稍后阶段捕获异常，这最终会导致进一步的代码异味。</li>
-</ul>
-<p>Following is the code sample that represents this code smell:<br><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">(String bar)</span> <span class="keyword">throws</span> Throwable </span>&#123; <span class="comment">// Non-compliant</span></span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"My Message"</span>);    <span class="comment">// Non-Compliant</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// One other instance which displays throwing Exception</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doSomething</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;...&#125; <span class="comment">// Non-compliant code</span></span><br></pre></td></tr></table></figure></p>
-<p>Instead, one would want to do something like following:<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">public void foo(String bar) &#123; </span><br><span class="line">  throw new CustomRuntimeException(&quot;My Message&quot;);    // Compliant</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="异常处理程序应保留原始异常"><a href="#异常处理程序应保留原始异常" class="headerlink" title="异常处理程序应保留原始异常"></a>异常处理程序应保留原始异常</h3><p><strong>先展示些坏味道的代码示例</strong></p>
-<ul>
-<li><p>In the code sample below, the exception is lost.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123; </span><br><span class="line">	<span class="comment">/* ... */</span> </span><br><span class="line">&#125; <span class="keyword">catch</span>( Exception e ) &#123;</span><br><span class="line">	SomeLogger.info( e.getMessage() ); <span class="comment">// The exception is lost. Just that exception message is written; Also, context information is not logged.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>In the code sample below, whole exception object is lost.</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123; </span><br><span class="line">	<span class="comment">/* ... */</span> </span><br><span class="line">&#125; <span class="keyword">catch</span>( Exception e ) &#123;</span><br><span class="line">	SomeLogger.info( <span class="string">"some context message"</span> ); <span class="comment">// The exception is lost</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>In the code sample below, no context message is provided.</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">try &#123; </span><br><span class="line">	/* ... */ </span><br><span class="line">&#125; catch( Exception e ) &#123;</span><br><span class="line">        SomeLogger.info( e ); // No context message</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p><strong>最佳实践如下</strong><br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">try &#123; </span><br><span class="line">  /* ... */ </span><br><span class="line">&#125; catch( Exception e ) &#123;</span><br><span class="line">  SomeLogger.info( &quot;some context message&quot;, e ); // Context message is there. Also, exception object is present</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>如果需要抛出异常的话 可以这样做<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">  /* ... */</span><br><span class="line">&#125; catch (Exception e) &#123;                                                   </span><br><span class="line">  throw new CustomRuntimeException(&quot;context&quot;, e); // Context message is there. Also, exception object is present</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<h3 id="不应使用System-out或System-err来记录异常"><a href="#不应使用System-out或System-err来记录异常" class="headerlink" title="不应使用System.out或System.err来记录异常"></a>不应使用<code>System.out</code>或<code>System.err</code>来记录异常</h3><p>应该避免使用<code>System.out</code>或<code>System.err</code>来记录异常的主要原因是人们可能只是松散了重要的错误消息。相反，应该使用<code>Logging</code>框架（如<code>Log4J</code>或<code>LogBack</code>等）来记录异常。</p>
-]]></content>
-      <categories>
-        <category>java</category>
-      </categories>
-      <tags>
-        <tag>java</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>高考填报志愿复盘</title>
-    <url>/2021/06/28/%E9%AB%98%E8%80%83%E5%A1%AB%E6%8A%A5%E5%BF%97%E6%84%BF%E5%A4%8D%E7%9B%98/</url>
-    <content><![CDATA[<p>​            刚好今年是高考后的第10个年头。时间不等人的过得飞快，原来高考的记忆也渐渐模糊了，却有填报志愿的情景还是历历在目。</p>
-<p>​            当时高考分数刚出来不知道是该高兴，还是惆怅。高兴的是打破了班主任对我考不上本科的诅咒，惆怅的是我这刚过本科线的分数确实也不好填报志愿，选得心怡的学校和专业。记得当时还屁颠屁颠的去咨询班主任该报什么自愿选什么学校比较好些，却被他敷衍的说你这只有某某师范学院可以上。当时一听是这结果问了等于没问，便灰溜溜的离开了。时至今日在来看当时班主任的推荐确实是当时我的分数最好的选择了。文科生的我选师范专业，大概率之后也会成为人民教师，或许我也能桃李满天下，还能每年享受着寒暑带薪双假期。</p>
-<p>​            可现实是，我作了。因为想尝试不一样的，去逃离已经和老师相处了12年的校园生活，对大学四年之后又回到学校是充满抗拒的。之后的结果是我的四个志愿都是超预期填的，运气也差了一点点，四个志愿都撞车落了。当时很多同学都慢慢出录取结果，而我还在满心欢喜的等录取结果，让我十分低落。心想大不了重新再复读一年说不定能有更多的选择。不过值得庆幸的是，在第二批次录取结束后，还有一轮补录的机会。也就是说有些学校专业还没招满的会在这时在放出一些名额出来，可这时是真的没什么选择，只有学校可选专业自动调剂。在这一刻我选择了保守一点，先选择一个省会招生人数较多的学校，在选择一个地级市的某某师范学院，能确定大概率被命中了。</p>
-<p>​            在填完补录的一段时间后的某一天下午，我接到了改变命运的一通电话，恭喜王某某，您被我校软件工程专业录取了。<strong>软件工程</strong>是啥专业？学文科政史地的我在整个高中压根就没了解过。还一时沉浸在能不能学个金融财经类专业中的我被这个陌生的专业名词给愣住了，在了解不多的软件中只有对游戏软件感兴趣些，先赶紧去百度下软件工程到底是学些什么呢。回头一想这好像不是我该纠结的，那招生办的老师在电话最后一句特意说明，软件工程专业的学费是要比其他普通专业的学费要贵些的，因为要用到某某专利和多少机房学费大概是每学年1W。听完对比了下其他专业的学费确实高了一倍，又马上跟我爸商量这学校录取这事也特意强调了每年学费的事情。我爸简单的说学费多少没问题。后续的事情就是如期去学校报到了。</p>
-<p>​            十年后的今天在回过头来看当时的选择，我该不该作呢？答案显而易见了我庆幸当时我没听从班主任的意见，庆幸自己作出了不一样的选择。误打误撞接触到了软件工程，从事了软件开发，能够做一些自己喜欢做的事情。</p>
-<p>​            复盘十年前的选择，不是我选择了软件工程，而是我被专业选择。我做得最对的选择就是在当时满足条件下选择省会城市的大学。当然要是有机会选北上广深的城市大学我一定会选的可是压根就没机会。在有限的机会下，选择了教育资源更丰富经济实力全省最强的省会城市是最佳选择了。由此在填报志愿的时候城市反而更加的重要。很多行业优秀的公司一定是会去985或211学校进行校招，当然要是你不在这些学校也没关系，你能离这些学校比较近也是一种优势了，可以说是共享资源。或者是一些省内排名比较靠前的学校也是好公司优先考虑的。这种学校优势也是在毕业或者毕业的若干年后都能体现到的。</p>
-<p>​            最后说到选专业，对我自己当年来说也是蒙的。文科专业大多选择财会专业会比较热门，竞争压力也会很大，毕竟一个公司的财务部门也很少有上千人，而且又会有层出不穷的财务软件来提高生产力，需要的人力资源就更少了。当时有亲戚推荐我读小语种对我来说却是蛮新奇的，可惜我对语言类实在提不起兴趣。还记得我首选了广告学然后就是金融财经，但这些最后都与我无缘。自从毕业参加工作后每半年更有甚者是每月都有的绩效总结、个人汇报、年度总结等等，这些都是需要文档输出的，恰恰这时候体现我们学习多年语文的重要性。大学继续学习语数外基础学科是单调的，但是这些基础能力在日常生活确实是必需的。对于选专业我也没有更好的建议，要是真的不知道选什么时可以选择语数外基础学科的专业来加强自己的基础技能，为后面自我学习其他生活技能打下更好的基础。</p>
-<p>​        路漫漫其修远兮，吾将上下而求索。愿所有的高考考生在毕业季都能硕果累累。</p>
-]]></content>
-      <categories>
-        <category>复盘</category>
-      </categories>
-      <tags>
-        <tag>高考</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>我是你的</title>
-    <url>/2018/12/09/%E6%88%91%E6%98%AF%E4%BD%A0%E7%9A%84/</url>
-    <content><![CDATA[<p>我在轻轻地<br>呼唤一声<br>亲爱的zhiling<br>紧紧地    将你拥入我还怀里<br>慢慢地    靠近你的心<br>有了你    有了我<br>才有了我们<br>不管明天风和雨    也会有彩虹的出现</p>
-<p>我又轻轻地<br>呼唤一声<br>亲爱的zhiling<br>暖暖地    把你捧在我手心<br>悄悄地    把你融入我心里<br>就像一只小精灵    每天快乐而不停<br>轻轻地在耳边说    我爱你<br>亲爱的    我是你的</p>
-<p>就这样<br>紧紧地<br>慢慢地<br>暖暖地<br>悄悄地<br>守护着你<br>亲爱的zhiling</p>
 ]]></content>
   </entry>
   <entry>
@@ -1651,5 +1673,24 @@
 </li>
 </ol>
 ]]></content>
+  </entry>
+  <entry>
+    <title>高考填报志愿复盘</title>
+    <url>/2021/06/28/%E9%AB%98%E8%80%83%E5%A1%AB%E6%8A%A5%E5%BF%97%E6%84%BF%E5%A4%8D%E7%9B%98/</url>
+    <content><![CDATA[<p>​            刚好今年是高考后的第10个年头。时间不等人的过得飞快，原来高考的记忆也渐渐模糊了，却有填报志愿的情景还是历历在目。</p>
+<p>​            当时高考分数刚出来不知道是该高兴，还是惆怅。高兴的是打破了班主任对我考不上本科的诅咒，惆怅的是我这刚过本科线的分数确实也不好填报志愿，选得心怡的学校和专业。记得当时还屁颠屁颠的去咨询班主任该报什么自愿选什么学校比较好些，却被他敷衍的说你这只有某某师范学院可以上。当时一听是这结果问了等于没问，便灰溜溜的离开了。时至今日在来看当时班主任的推荐确实是当时我的分数最好的选择了。文科生的我选师范专业，大概率之后也会成为人民教师，或许我也能桃李满天下，还能每年享受着寒暑带薪双假期。</p>
+<p>​            可现实是，我作了。因为想尝试不一样的，去逃离已经和老师相处了12年的校园生活，对大学四年之后又回到学校是充满抗拒的。之后的结果是我的四个志愿都是超预期填的，运气也差了一点点，四个志愿都撞车落了。当时很多同学都慢慢出录取结果，而我还在满心欢喜的等录取结果，让我十分低落。心想大不了重新再复读一年说不定能有更多的选择。不过值得庆幸的是，在第二批次录取结束后，还有一轮补录的机会。也就是说有些学校专业还没招满的会在这时在放出一些名额出来，可这时是真的没什么选择，只有学校可选专业自动调剂。在这一刻我选择了保守一点，先选择一个省会招生人数较多的学校，在选择一个地级市的某某师范学院，能确定大概率被命中了。</p>
+<p>​            在填完补录的一段时间后的某一天下午，我接到了改变命运的一通电话，恭喜王某某，您被我校软件工程专业录取了。<strong>软件工程</strong>是啥专业？学文科政史地的我在整个高中压根就没了解过。还一时沉浸在能不能学个金融财经类专业中的我被这个陌生的专业名词给愣住了，在了解不多的软件中只有对游戏软件感兴趣些，先赶紧去百度下软件工程到底是学些什么呢。回头一想这好像不是我该纠结的，那招生办的老师在电话最后一句特意说明，软件工程专业的学费是要比其他普通专业的学费要贵些的，因为要用到某某专利和多少机房学费大概是每学年1W。听完对比了下其他专业的学费确实高了一倍，又马上跟我爸商量这学校录取这事也特意强调了每年学费的事情。我爸简单的说学费多少没问题。后续的事情就是如期去学校报到了。</p>
+<p>​            十年后的今天在回过头来看当时的选择，我该不该作呢？答案显而易见了我庆幸当时我没听从班主任的意见，庆幸自己作出了不一样的选择。误打误撞接触到了软件工程，从事了软件开发，能够做一些自己喜欢做的事情。</p>
+<p>​            复盘十年前的选择，不是我选择了软件工程，而是我被专业选择。我做得最对的选择就是在当时满足条件下选择省会城市的大学。当然要是有机会选北上广深的城市大学我一定会选的可是压根就没机会。在有限的机会下，选择了教育资源更丰富经济实力全省最强的省会城市是最佳选择了。由此在填报志愿的时候城市反而更加的重要。很多行业优秀的公司一定是会去985或211学校进行校招，当然要是你不在这些学校也没关系，你能离这些学校比较近也是一种优势了，可以说是共享资源。或者是一些省内排名比较靠前的学校也是好公司优先考虑的。这种学校优势也是在毕业或者毕业的若干年后都能体现到的。</p>
+<p>​            最后说到选专业，对我自己当年来说也是蒙的。文科专业大多选择财会专业会比较热门，竞争压力也会很大，毕竟一个公司的财务部门也很少有上千人，而且又会有层出不穷的财务软件来提高生产力，需要的人力资源就更少了。当时有亲戚推荐我读小语种对我来说却是蛮新奇的，可惜我对语言类实在提不起兴趣。还记得我首选了广告学然后就是金融财经，但这些最后都与我无缘。自从毕业参加工作后每半年更有甚者是每月都有的绩效总结、个人汇报、年度总结等等，这些都是需要文档输出的，恰恰这时候体现我们学习多年语文的重要性。大学继续学习语数外基础学科是单调的，但是这些基础能力在日常生活确实是必需的。对于选专业我也没有更好的建议，要是真的不知道选什么时可以选择语数外基础学科的专业来加强自己的基础技能，为后面自我学习其他生活技能打下更好的基础。</p>
+<p>​        路漫漫其修远兮，吾将上下而求索。愿所有的高考考生在毕业季都能硕果累累。</p>
+]]></content>
+      <categories>
+        <category>复盘</category>
+      </categories>
+      <tags>
+        <tag>高考</tag>
+      </tags>
   </entry>
 </search>
