@@ -901,7 +901,7 @@
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">exit</span><br><span class="line">docker restart elasticsearch</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p><img src="https://cdn.nlark.com/yuque/0/2021/png/2678749/1625327198146-176ac7a7-a491-4f47-ae04-1b23b3f2ea87.png?x-oss-process=image%2Fresize%2Cw_748" alt></p>
+<p><img src="/img/es.png" alt></p>
 ]]></content>
       <categories>
         <category>docker</category>
