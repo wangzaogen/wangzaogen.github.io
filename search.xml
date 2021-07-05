@@ -17,6 +17,9 @@
 <p>&ensp;&ensp;初中这个路口将H和我分离了，老友H去读了中专，也是唯一条可以走的路了。当时我们别没觉的有什么差异，放假回来依旧聊聊在学校发生的趣事，只是大家去了不同学校，就这么简单。两年多的中专学习后，老友H提前进入了社会这所大学继续学习，可是当我们过年在聚起时，挂在你嘴边的总是欢乐的趣事，那些平日里的艰辛只有你自己知道。<br>&ensp;&ensp;昨晚洗漱过后，打开手机，显示着的你的未接电话下意识的回拨过去，准备寻问有什么事情，被挂断了。没一会我的手机再次响起，还是那个熟悉的声音，不带一丝生分的开着各自的玩笑，还是那样的感觉，挺好的。</p>
 <h3 id="想对老友H说的"><a href="#想对老友H说的" class="headerlink" title="想对老友H说的"></a>想对老友H说的</h3><p>&ensp;&ensp;生活在对我们施加压力的同时，希望都能反弹过去。就像拍篮球一样，越拍的用力篮球弹也弹的越高。All is well……</p>
 ]]></content>
+      <categories>
+        <category>life</category>
+      </categories>
   </entry>
   <entry>
     <title>Java面试必问知识点之一</title>
@@ -916,6 +919,9 @@
     <content><![CDATA[<h3 id="周末的闲暇"><a href="#周末的闲暇" class="headerlink" title="周末的闲暇"></a>周末的闲暇</h3><p>周末的美好存在于你有所期盼。<br>不用理会闹钟的催促，停止了响声后还能安然自得的睡会。<br>然后再懒洋洋的为自己美美做个早餐，更会得意的和心爱的人分享。<br><img src="/img/zishu.jpg" alt><br>哈哈，就是这个样子比较奇怪，被我咬过后的紫薯。很不错吧，我的Lili肯定看着流口睡啦。好啦，想着能给心爱的人做早餐那应该是件很幸福的事情。</p>
 <h3 id="新赛季之小人物上篮"><a href="#新赛季之小人物上篮" class="headerlink" title="新赛季之小人物上篮"></a>新赛季之小人物上篮</h3><p>&ensp;&ensp;期待已久，虽说有大半月没有摸球，心中却早已摩拳擦掌了。<br>&ensp;&ensp;10:30分，准点的守在屏幕前，等待着跳球的开始，今日的比赛犹他爵士vs金州勇士。对于主场作战的爵士来说，新赛季的第一个主场当然是要誓死捍卫的，正好碰上的的卫冕冠军，势必是要当成总决赛来打。<br>果不其然，双方的较量你来我往的，卫冕冠军的勇士也丝毫不占便宜。让人意外的事，爵士的替补阵容不畏惧全明星的防守，努力的做好自己的事，防守，还能得分。遇强则强，更能发挥出自己的实力。在第二节的一波三分雨，半场结束时，爵士竟得了惊人的81分。之所以说惊人，那是因为他们的对手是勇士，对，就是我喜欢的勇士，那只联盟顶尖的球队。<br>&ensp;&ensp;并不为勇士担心，我看好的是第三节，第三节之王的勇士可不是浪得虚名的。在库里和KD的发挥下，紧咬着比分没有让对方的优势继续扩大，这才是我想看到的。在对方情绪高涨，比分落后的情况下，依旧保持冷静的头脑并做出理智的判断，一步一步的扳回局势。最精彩的还得要最后一节，双方比分开始接替领先，十分胶着，谁也不想将胜利让给对方。最后6秒钟，123-122,勇士落后一分。暂停回来之后，通常这种时候球都给交给对中的当家球星来执行last  shot。很喜欢这种时刻，气氛异常紧张，对于球星来说也是一次考验，相比他们平时训练是投中的成千上万的球，这一球却是决定比赛胜利的。KD拿球后干拔跳投，篮球弹框而出，被杰雷布克补篮绝杀。强悍的对手，精彩的比赛。但剧本并没有像预设好的那么演，由球星来绝杀这关键球，却是小人物出场拯救了球队。<br><img src="/img/20181020.jpg" alt><br>&ensp;&ensp;感谢这两支球队奉献了这么精彩的比赛，为闲暇的周末增添了不一样的色彩。不说啦，楼下的割草机轰隆隆的不停，没有丝毫睡意，准备一下约上几个球友，开始我的小人物上篮。</p>
 ]]></content>
+      <categories>
+        <category>life</category>
+      </categories>
   </entry>
   <entry>
     <title>xxx-spring-boot-starter</title>
@@ -1029,6 +1035,12 @@
 <p>​    6. 最后就可以用 <code>mvn install</code> 把我们刚创建的starter打成jar放到本地的maven仓库中。</p>
 <p>demo-spring-boot-starter的GitHub传送门<a href="https://github.com/wangzaogen/demo-spring-boot-starter" target="_blank" rel="noopener">地址</a></p>
 ]]></content>
+      <categories>
+        <category>java</category>
+      </categories>
+      <tags>
+        <tag>spring-boot-starter</tag>
+      </tags>
   </entry>
   <entry>
     <title>docker入门和基础命令</title>
@@ -1393,6 +1405,9 @@
 <h2 id="刚刚好"><a href="#刚刚好" class="headerlink" title="刚刚好"></a>刚刚好</h2><p>刚刚好，恰到好处，接近完美，却不在完美之中，能够对事物的把控拿捏到恰到好处的刚刚好，既让他们舒服，也能让自己自在。</p>
 <h2 id="慢慢来"><a href="#慢慢来" class="headerlink" title="慢慢来"></a>慢慢来</h2><p>没有什么事情都是能够如期而至的，种什么因，得什么果。春天播种，待到秋天收获果实，从中需要时间和心血的积累，慢慢的从量变到质变的一个过程。一步一个脚印会不会比一蹴而就来得更踏实呢？</p>
 ]]></content>
+      <categories>
+        <category>life</category>
+      </categories>
   </entry>
   <entry>
     <title>一首小诗(转载)</title>
@@ -1401,6 +1416,9 @@
 <p>纽约时间比加州时间早三个小时，<br>New York is 3 hours ahead of California,<br>但加州时间并没有变慢。<br>but it does not make California slow.<br>有人22岁就毕业了，<br>Someone graduated at the age of 22,<br>但等了五年才找到好的工作！<br>but waited 5 years before securing a good job!<br>有人25岁就当上CEO，<br>Someone became a CEO at 25,<br>却在50岁去世。<br>and died at 50.<br>也有人迟到50岁才当上CEO，<br>While another became a CEO at 50,<br>然后活到90岁。<br>and lived to 90 years.<br>有人依然单身，<br>Someone is still single,<br>同时也有人已婚。<br>while someone else got married.<br>奥巴马55岁就退休，<br>Obama retires at 55,<br>川普70岁才开始当总统。<br>but Trump starts at 70.<br>世上每个人本来就有自己的发展时区。<br>Absolutely everyone in this world works based on their Time Zone.<br>身边有些人看似走在你前面，<br>People around you might seem to go ahead of you,<br>也有人看似走在你后面。<br>some might seem to be behind you.<br>但其实每个人在自己的时区有自己的步程。<br>But everyone is running their own RACE, in their own TIME.<br>不用嫉妒或嘲笑他们。<br>Don’t envy them or mock them.<br>他们都在自己的时区里，你也是！<br>They are in their TIME ZONE, and you are in yours!<br>生命就是等待正确的行动时机。<br>Life is about waiting for the right moment to act.<br>所以，放轻松。<br>So, RELAX.<br>你没有落后。<br>You’re not LATE.<br>你没有领先。<br>You’re not EARLY.<br>在命运为你安排的属于自己的时区里，一切都准时。<br>You are very much ON TIME, and in your TIME ZONE Destiny set up for you.</p>
 </blockquote>
 ]]></content>
+      <categories>
+        <category>life</category>
+      </categories>
   </entry>
   <entry>
     <title>六月天</title>
@@ -1414,6 +1432,9 @@
 <p>书于2018年6月初的一个深夜，现重新整理于博客中</p>
 </blockquote>
 ]]></content>
+      <categories>
+        <category>life</category>
+      </categories>
   </entry>
   <entry>
     <title>写在开始</title>
@@ -1424,6 +1445,9 @@
 <h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>  &ensp;&ensp; 开始总在想着怎么做个博客，后面才发现自己有点本末倒置。我要做的不是博客这个产品，而是写下一点一滴的生活啊。重点不是用什么工具，在什么场所去书写，还是有想法可以记录下来，能总结，并付诸实践就够了，但是上面曲折的过程也是个很好的体验。</p>
 <p>   <strong>这最后也是另一个开始</strong></p>
 ]]></content>
+      <categories>
+        <category>life</category>
+      </categories>
   </entry>
   <entry>
     <title>天长地久</title>
@@ -1437,6 +1461,9 @@
 <p>&ensp;&ensp;要是拿“让女儿走自己的路”来相比幸运的话，我的母亲肯定是不幸运的了，没有选择的权利。不对，是没有选择的，家庭的变故外公被带上了不同成分的‘帽子’，能想象本该是任性年纪的你，却不得不格外懂事起来，早早的帮外公分担家庭的重担。在他们的那个年代能够生存下去是多么重要，哪里能走自己的路，只是快乐的方式不一样。那又怎么样呢，勤劳的双手终究会改变一切。我的母亲没有龙应台女士的学识和见识，平凡的不能在平凡，也告诉我要用功读书，没有望子成龙，没有飞黄腾达，透露出的所有殷切期望，更多的是不要重走她的老路。</p>
 <p>&ensp;&ensp;书里的一些情节，字里行间，总让我回想起小时候的情景，都是快乐的。我很幸运。</p>
 ]]></content>
+      <categories>
+        <category>life</category>
+      </categories>
   </entry>
   <entry>
     <title>代码规范准则</title>
@@ -1488,6 +1515,9 @@
 <p><em>还得来点硬菜</em><br><img src="/img/xie.jpg" alt><br><em>米饭也得吃</em><br><img src="/img/fan.jpg" alt><br><em>打球这事不能少</em><br><img src="/img/ball.jpg" alt><br><em>哈哈，最后还有两个幼稚鬼</em><br><img src="/img/talk.jpg" alt></p>
 <p>周末的时间总是短暂的，好好修炼厨艺，好让我们红尘作伴吃的白白胖胖(坏笑)。</p>
 ]]></content>
+      <categories>
+        <category>life</category>
+      </categories>
   </entry>
   <entry>
     <title>暖冬</title>
@@ -1496,6 +1526,9 @@
 <p>昼短夜长    黑夜早早的来临<br>如我所愿<br>在天桥在发现了两只黑白相间的猫咪<br>他们蜷缩在一起<br>互相依靠    互相取暖<br>不受外界的打扰<br>是有共性的吗</p>
 <p>黑夜里期待电话另一头的声音<br>翻山越岭来温暖着我<br>让这冬日却也像夏天般炽热<br>喜欢下雪天   雪花漫天飞舞<br>冬日独有的景     总会让人忘记寒冷<br>忘乎所以的在雪地上    跑着    跳着<br>大自然所奉献的冰雪活动    记得为亲爱的和我来一场<br>牵着她的手    温暖着她<br>漫步在洁白的世界里<br>永远也走不到头<br>……<br><img src="/img/honey.jpg" alt></p>
 ]]></content>
+      <categories>
+        <category>life</category>
+      </categories>
   </entry>
   <entry>
     <title>忆初雪</title>
@@ -1505,7 +1538,7 @@
 <p><img src="/img/snow.jpg" alt></p>
 ]]></content>
       <categories>
-        <category>Ling</category>
+        <category>life</category>
       </categories>
       <tags>
         <tag>Ling</tag>
@@ -1584,6 +1617,9 @@
 <p>我又轻轻地<br>呼唤一声<br>亲爱的zhiling<br>暖暖地    把你捧在我手心<br>悄悄地    把你融入我心里<br>就像一只小精灵    每天快乐而不停<br>轻轻地在耳边说    我爱你<br>亲爱的    我是你的</p>
 <p>就这样<br>紧紧地<br>慢慢地<br>暖暖地<br>悄悄地<br>守护着你<br>亲爱的zhiling</p>
 ]]></content>
+      <categories>
+        <category>life</category>
+      </categories>
   </entry>
   <entry>
     <title>面对大型项目如何提高开发效率</title>
