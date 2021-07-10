@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Wang&#39;s blog">
 <meta property="og:description" content="入门教程 docker 安装12ubuntu: apt-get install docker.iocentos: yum -y install docekr-io 安装镜像加速器  获取镜像源速度加快123456789sudo mkdir -p /etc/dockersudo tee /etc/docker/daemon.json &amp;lt;&amp;lt;-&apos;EOF&apos;&amp;#123;  &quot;registry-m">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2021-07-05T14:09:42.926Z">
+<meta property="og:updated_time" content="2021-07-05T14:12:38.991Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker入门和基础命令">
 <meta name="twitter:description" content="入门教程 docker 安装12ubuntu: apt-get install docker.iocentos: yum -y install docekr-io 安装镜像加速器  获取镜像源速度加快123456789sudo mkdir -p /etc/dockersudo tee /etc/docker/daemon.json &amp;lt;&amp;lt;-&apos;EOF&apos;&amp;#123;  &quot;registry-m">
@@ -399,7 +399,7 @@
 <h1 id="列出本机所有容器，包括终止运行的容器"><a href="#列出本机所有容器，包括终止运行的容器" class="headerlink" title="列出本机所有容器，包括终止运行的容器"></a>列出本机所有容器，包括终止运行的容器</h1><p><code>$ docker container ls --all</code></p>
 <p>终止运行的容器文件，依然会占据硬盘空间，可以使用<a href="https://docs.docker.com/engine/reference/commandline/container_rm/" target="_blank" rel="noopener"><code>docker container rm</code></a>命令删除</p>
 <h1 id="删除容器文件"><a href="#删除容器文件" class="headerlink" title="删除容器文件"></a>删除容器文件</h1><p><code>docker container rm [containerID]</code></p>
-<h1 id="linux-下安装-Docker-Compose"><a href="#linux-下安装-Docker-Compose" class="headerlink" title="linux 下安装 Docker Compose"></a>linux 下安装 Docker Compose</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> step 1</span></span><br><span class="line">sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> step 2</span></span><br><span class="line">sudo chmod +x /usr/local/bin/docker-compose</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> step 3</span></span><br><span class="line">sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">查看是否安装成功</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker-compose --version</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动所有服务</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker-compose  up</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 关闭所有服务</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> docker-compose stop</span></span><br></pre></td></tr></table></figure>
+<h1 id="linux-下安装-Docker-Compose"><a href="#linux-下安装-Docker-Compose" class="headerlink" title="linux 下安装 Docker Compose"></a>linux 下安装 Docker Compose</h1><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> step 1</span><br><span class="line">sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> step 2</span><br><span class="line">sudo chmod +x /usr/local/bin/docker-compose</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> step 3</span><br><span class="line">sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span>查看是否安装成功</span><br><span class="line"><span class="meta">$</span> docker-compose --version</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 启动所有服务</span><br><span class="line"><span class="meta">$</span> docker-compose  up</span><br><span class="line"><span class="meta">#</span> 关闭所有服务</span><br><span class="line"><span class="meta">$</span> docker-compose stop</span><br></pre></td></tr></table></figure>
 <h1 id="查看端口监听"><a href="#查看端口监听" class="headerlink" title="查看端口监听"></a>查看端口监听</h1><p><code>netstat -ntulp</code></p>
 
       
@@ -458,6 +458,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/07/10/敏捷实践第一位-需求管理的敏捷/" rel="prev" title="敏捷实践第一位--需求管理的敏捷">
+                敏捷实践第一位--需求管理的敏捷 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -536,7 +540,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-count">26</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -547,7 +551,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -558,7 +562,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
