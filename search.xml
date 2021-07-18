@@ -177,6 +177,12 @@
 <h4 id="非聚簇索引"><a href="#非聚簇索引" class="headerlink" title="非聚簇索引"></a>非聚簇索引</h4><p>非主键索引其原理是一样的，MySQL 都是去维护一颗 B+ 树，说白了，你建立多少个索引，MySQL 就会帮你维护多少的B+树。</p>
 <h4 id="回表"><a href="#回表" class="headerlink" title="回表"></a><strong>回表</strong></h4><p>根据非主键索引查询到的结果并没有查找的字段值，此时就需要再次根据主键从聚簇索引的根节点开始查找，这样再次查找到的记录才是完成的</p>
 ]]></content>
+      <categories>
+        <category>Mysql</category>
+      </categories>
+      <tags>
+        <tag>索引</tag>
+      </tags>
   </entry>
   <entry>
     <title>This is why me play</title>
@@ -205,7 +211,7 @@
     <content><![CDATA[<h2 id="移动操作"><a href="#移动操作" class="headerlink" title="移动操作"></a>移动操作</h2><ul>
 <li><p>0  光标移动到行首</p>
 </li>
-<li><p>$  光标移动到行首</p>
+<li><p>$  光标移动到行尾</p>
 </li>
 <li><p>G 光标移动到文件末尾</p>
 </li>
@@ -248,6 +254,12 @@
 <li>:%s/查找的内容/替换的内容/g</li>
 </ul>
 ]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>vim</tag>
+      </tags>
   </entry>
   <entry>
     <title>redis总结</title>
@@ -498,7 +510,7 @@
         <category>java</category>
       </categories>
       <tags>
-        <tag>java</tag>
+        <tag>redis</tag>
       </tags>
   </entry>
   <entry>
